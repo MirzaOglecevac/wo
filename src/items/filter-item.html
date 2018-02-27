@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+
+<dom-module id="filter-item">
+  <template>
+    <style>
+
+	#item > p {
+		padding: 0;
+		margin: 0;
+		font-family: "Roboto";
+		font-weight: 400;
+	}
+
+	</style>
+
+	  <div id="item">
+		  <p on-click="_filterList">{{entry}}</p>
+	  </div>
+
+	</template>
+  <script>
+    
+    class FilterItem extends Polymer.Element {
+      static get is() { return 'filter-item'; }
+	  
+	  static get properties(){
+		return {
+            entry: String
+		}
+	  }
+
+      _filterList(event){
+		   console.log("Filter name: " + event.target.innerHTML);
+       }
+      
+    }
+
+    window.customElements.define(FilterItem.is, FilterItem);
+  </script>
+</dom-module>

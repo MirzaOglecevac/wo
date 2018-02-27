@@ -1,0 +1,139 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Scripts -->
+<script src="background/viewModels/userdetailVM.js"></script>
+<script src="background/models/userdetailModel.js"></script>
+<script src="background/core/configuration.js"></script>
+
+<!-- Items -->
+<link rel="import" href="items/profile-card.html">
+<link rel="import" href="items/report-card.html">
+<link rel="import" href="items/content-card.html">
+<link rel="import" href="loaders/detail-loader/detail-loader.html">
+
+<dom-module id="my-userdetail">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .emptyCard {
+                width: 60%;
+                margin: 0 auto;
+            }
+
+            /* Loader style */
+
+            detail-loader {
+                --loader-background: #e0e0e0;
+                --loader-color: #bbb;
+            }
+
+        </style>
+
+
+        <app-route
+                route="{{route}}"
+                pattern="/:id"
+                data="{{routeData}}">
+        </app-route>
+
+        <!-- HTTP Request -->
+        <iron-ajax
+                auto
+                id="ironAjax"></iron-ajax>
+
+        <div class="emptyCard">
+
+            <div id="loadingScreen">
+                <detail-loader></detail-loader>
+            </div>
+
+            <div id="mainScreen">
+                 <profile-card entry="[[profileInfo]]"></profile-card><br/>
+                 <report-card entry="[[profileInfo]]"></report-card><br/>
+                <template id="list" is="dom-repeat" items="[[contentItems]]" as="contentItem">
+                    <content-card entry="[[contentItem]]"></content-card>
+                </template>
+            </div>
+        </div>
+
+
+    </template>
+
+    <script>
+        class MyUserdetail extends UserdetailVM(Polymer.Element, UserdetailModel, Configuration) {
+            static get is() { return 'my-userdetail'; }
+
+            static get properties() {
+                return {
+                    profileInfo: {
+                        type: Array,
+                        observer: '_onUserdetailModelChange'
+                    },
+                    /*profileInfo: {
+                        type: Object,
+                        value: {
+                            "profileImage": "http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                            "profileName": "Arslan Hajdarevic",
+                            "followers": 100000000,
+                            "type": "Influencer",
+                            "userBio": "Ipsum",
+                            "reported": "Y",
+                            "reportText": "This user has...",
+                            "external": {
+                                patreon: "www.mojawebstranica.com",
+                                shop: null,
+                                other: null //"http://www.api.admin.ba"
+                            }
+                        }
+                    },*/
+                    contentItems: {
+                        type:Array,
+                        value : function(){return [
+                            {
+                                 "user_image":"http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                                 "full_name":"Some name",
+                                 "date":"2018-20-20",
+                                 "image":"http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                                 "body":"Some body",
+                                 "likes":121,
+                                 "comments":12,
+                                 "shares":12,
+                                 "type":"INSTA"
+                            }
+                        ];},
+                    }
+                }
+            }
+
+
+            static get observers(){
+                return [
+                    '_itemChanged()'
+                ]
+            }
+
+            _itemChanged(){
+                console.log("Id: " + this.routeData.id);
+                this.id = this.routeData.id;
+            }
+
+            ready(){
+                super.ready();
+                this.$.loadingScreen.style = "display: block;";
+                this.$.mainScreen.style = "display: none;";
+                this.bind(this.routeData.id, this.$.ironAjax);
+            }
+
+        }
+
+        window.customElements.define(MyUserdetail.is, MyUserdetail);
+    </script>
+</dom-module>

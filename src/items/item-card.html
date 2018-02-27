@@ -1,0 +1,74 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="item-card">
+  <template>
+    <style>
+
+		#item {
+			width: 100%;
+			padding: 5px 10px;
+			text-align: left;
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			background-color: transparent;
+			color: #757575;
+			font-family: "Roboto";
+			font-weight: 500;
+		}
+
+		#item span {
+			padding-left: 15px;
+		}
+
+		a {
+			display: inline-block;
+			max-width: 100%;
+			text-decoration: none;
+			color: inherit;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		#item :hover {
+			color: #000;
+		}
+
+	</style>
+
+		<div id="item">
+			<a name="{{entry.href}}" href="[[rootPath]]{{entry.href}}">
+				<iron-icon icon="{{entry.image}}"></iron-icon>
+				<span>{{entry.title}}</span>
+			</a>
+		</div>
+
+	</template>
+  <script>
+    
+    class ItemCard extends Polymer.Element {
+      static get is() { return 'item-card'; }
+	  
+	  static get properties(){
+		return {
+            entry: Object,
+			text: {
+			    type: String,
+				value: "Heading"
+			},
+			iconValue: {
+			    type: String,
+				value: "add"
+			}
+		}
+	  }
+      
+    }
+
+    window.customElements.define(ItemCard.is, ItemCard);
+  </script>
+</dom-module>

@@ -1,0 +1,114 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="report-card">
+  <template>
+    <style>
+      
+	  
+	  #report {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			width: 100%;
+			min-width: 350px;
+		    color: #212121;
+		    font-family: "Roboto";
+		    font-weight: 500;
+			padding: 0px 10px 0px 10px;
+			margin: 0 auto;
+			border-radius: 5px;
+			box-sizing: border-box;
+			background-color: #fff;
+		    box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+		}
+
+		
+		#report > div {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			padding: 10px 0 0 0;
+		}
+
+		
+		#report > p:first-child {
+			color: #777;
+			font-weight: 500 !important;
+		}
+
+		  #report > p:nth-child(2) {
+			  color: #666;
+			  font-weight: 400;
+		  }
+
+		  #report > div > p {
+			  padding: 0;
+			  margin: 0;
+		  }
+
+		
+		#report > p:nth-child(3) {
+			align-self: flex-end;
+			font-weight: bold;
+            padding: 0;
+			margin-right: 5px;
+            margin-bottom: 5px;
+		}
+		
+		#report > p:nth-child(3):hover {
+			color: #42A5F5;
+			cursor: pointer;
+		}
+
+		iron-icon {
+			color: red;
+		}
+	  
+    </style>
+   
+
+	<template is="dom-if" if="true">
+
+		<div id="report">
+			<div>
+				<p>Report</p>
+				<iron-icon icon="report"></iron-icon>
+			</div>
+			<p>{{entry.reportText}}</p>
+			<p on-click="_closeReport">Ok</p>
+		</div>
+
+	</template>
+	
+	</template>
+  <script>
+    
+    class ReportCard extends Polymer.Element {
+      static get is() { return 'report-card'; }
+	  
+	  static get properties(){
+		return {
+			entry: Object,
+			text: {
+				type: String,
+				value: "Lorem ipsum..."
+			}
+		}
+	  }
+
+        _closeReport(){
+            console.log("Report closed.");
+            this.dispatchEvent(new CustomEvent('close-report', {
+                bubbles: true, composed: true, detail: {
+                    areYouSure: "yes",
+                    text: "Are you sure you want to mark this report as read?"
+                }}));
+        }
+      
+    }
+
+    window.customElements.define(ReportCard.is, ReportCard);
+  </script>
+</dom-module>

@@ -1,0 +1,168 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+
+<dom-module id="user-card">
+  <template>
+    <style>
+
+		a {
+			text-decoration: none;
+		}
+	  
+	  .user {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			width: 100%;
+			min-width: 350px;
+			padding: 10px;
+			margin: 0 auto;
+			border-radius: 5px;
+			box-sizing: border-box;
+			background-color: #fff;
+		  	margin-bottom: 15px;
+			box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+		    cursor: pointer;
+		}
+
+		.leftSide {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+
+		.rightSide {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.leftSide > iron-image {
+			display: inline-block;
+			--iron-image-width: 100px;
+			--iron-image-height: 100px;
+			margin: 0 10px;
+			border-radius: 50%;
+		}
+
+		.userInfo > p {
+			color: #BDBDBD;
+			font-family: "Roboto";
+			font-weight: 400;
+			padding: 0;
+			margin: 0;
+		}
+
+		p:first-child {
+			font-family: "Roboto";
+			font-weight: 500;
+			color: #212121;
+		}
+
+		.rightSide {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.rightSide > iron-icon {
+			fill: red;
+			margin-bottom: 15px;
+
+		}
+
+	  .rightSide  #checkbox {
+		  margin: auto 0 auto 3px;
+	  }
+
+		#verifiedIcon {
+			fill: green !important;
+			margin-bottom: -13px;
+		}
+
+
+	</style>
+
+
+	  <a href="[[path]]/userdetail/{{entry.user_id}}">
+
+		  <div class="user">
+			<div class="leftSide">
+
+				<!-- If has image -->
+				<template is="dom-if" if="{{entry.image}}">
+					<iron-image src$="{{entry.image}}" alt="Not Found"></iron-image>
+				</template>
+				<!-- If doens't have image -->
+				<template is="dom-if" if="{{!entry.image}}">
+					<iron-image src="{{entry.social_accounts.0.profile_image}}" alt="Not Found"></iron-image>
+				</template>
+
+				<div class="userInfo">
+					<p>{{entry.full_name}}</p>
+					<p>{{entry.social_accounts.0.followers}}</p>
+				</div>
+			</div>
+
+			<div class="rightSide">
+				<!-- If verified -->
+				<template is="dom-if" if="{{entry.verified}}">
+					<iron-icon id="verifiedIcon" icon="check-circle"></iron-icon>
+				</template>
+				<!-- If reported -->
+				<template is="dom-if" if="{{entry.reported}}">
+					<iron-icon icon="report"></iron-icon>
+				</template>
+				<!-- Is Search  -->
+					<template is="dom-if" if="{{entry.searchCard}}">
+						<paper-checkbox id="checkbox" on-click="_disableLink"></paper-checkbox>
+					</template>
+				<!-- Social logo  -->
+				<template is="dom-if" if="{{entry.logo}}">
+					<div id="instagram" on-click="_openSocialDialog" style="
+								width: 22px;
+								height: 22px;
+								background-color: #666;
+								-webkit-mask-image: url('../images/icons/[[entry.logo]].svg');
+								-webkit-mask-size: 22px;">
+					</div>
+				</template>
+
+			</div>
+		</div>
+
+	  </a>
+
+	
+	</template>
+
+	<script>
+
+	class UserCard extends Polymer.Element {
+	  	static get is() { return 'user-card'; }
+
+		static get properties(){
+			return {
+				entry:Object
+
+			}
+		}
+
+		ready(){
+			super.ready();
+		}
+
+		_disableLink(event){
+
+		}
+
+	}
+
+	window.customElements.define(UserCard.is, UserCard);
+	</script>
+
+</dom-module>

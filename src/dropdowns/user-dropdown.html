@@ -1,0 +1,116 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+
+<dom-module id="user-dropdown">
+    <template>
+        <style>
+
+
+            #admin {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin: 0 auto;
+                border-radius: 0px !important;
+                box-sizing: border-box;
+                background-color: #fff;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            }
+
+            #admin > #user {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 10px;
+            }
+
+            #admin > #signOut {
+                background-color: #777;
+                opacity: 0.54;
+                text-align: center;
+                color: #fff;
+                padding: 10px 0;
+            }
+
+            #admin div img {
+                display: inline-block;
+                width: 70px;
+                height: 70px;
+                margin: 0 10px;
+                border-radius: 50%;
+            }
+
+            .userInfo > p {
+                padding: 0;
+                margin: 0;
+                font-family: "Roboto";
+                font-size: 16px;
+                color: #BDBDBD;
+            }
+
+            .userInfo p:first-child {
+                color: #212121;
+                font-weight: 500;
+            }
+
+            .userInfo p:nth-child(2) {
+                color: #666;
+                opacity: 0.54;
+            }
+
+            #admin > #signOut {
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+            #admin > #signOut span{
+                cursor: pointer;
+                font-weight: 400;
+                color: #111;
+                font-size: 16px;
+            }
+
+        </style>
+
+        <div id="admin" class="arrow_box">
+            <div id="user">
+                <img src$={{entry.image}} alt="Not Found" />
+                <div class="userInfo">
+                    <p>{{entry.name}} {{entry.surname}}</p>
+                    <p>{{entry.email}}</p>
+                    <p>{{entry.scope}}</p>
+                </div>
+            </div>
+
+            <div id="signOut" on-click="_signOut">
+                Sign out
+            </div>
+        </div>
+
+    </template>
+    <script>
+
+        class AdminDropdown extends Polymer.Element {
+
+            static get is() { return 'user-dropdown'; }
+
+            static get properties(){
+                return {
+                    entry:Object
+                }
+            }
+
+            ready() {
+                super.ready();
+                this.entry = this.entry[0];
+            }
+
+            _signOut() {
+                console.log('sign out');
+            }
+        }
+
+        window.customElements.define(AdminDropdown.is, AdminDropdown);
+    </script>
+</dom-module>

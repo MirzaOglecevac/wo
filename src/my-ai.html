@@ -1,0 +1,145 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/emo-ji/test.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Scripts -->
+<script src="background/viewModels/aiVM.js"></script>
+<script src="background/models/aiModel.js"></script>
+<script src="background/core/configuration.js"></script>
+
+<!-- Items -->
+<link rel="import" href="items/merge-card.html">
+<link rel="import" href="loaders/ai-loader/ai-loader.html">
+
+<dom-module id="my-ai">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .emptyCard {
+                padding: 0;
+                margin: 0;
+                position: relative;
+                //bottom: 20px;
+                height: 610px;
+                width: 95%;
+                margin: 0 auto;
+            }
+
+            ai-loader {
+                --loader-background: #e0e0e0;
+                --loader-color: #bbb;
+            }
+
+            .loader {
+                text-align: center;
+                height: 20px;
+                font-size: 14px;
+                line-height: 20px;
+                margin: 0;
+                padding: 0;
+                color: #757575;
+            }
+
+            #mainScreen {
+                height: 580px;
+                padding: 0 10px 0 10px;
+                width: 100%;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+
+        </style>
+
+        <!-- HTTP Request -->
+        <iron-ajax
+                auto
+                id="ironAjax"></iron-ajax>
+
+        <div class="emptyCard">
+
+            <div id="skeletonScreen">
+                <template is="dom-repeat" items="[[counter]]">
+                    <ai-loader></ai-loader>
+                </template>
+            </div>
+
+            <div id="mainScreen">
+                <template id="aiList" is="dom-repeat" items="[[mergeUsers]]" as="mergeUser">
+                    <merge-card entry="[[mergeUser]]"></merge-card>
+                </template>
+            </div>
+
+            <div id="loader" class="loader">Fetching new items...<emo-ji type="tada"></emo-ji></div>
+
+        </div>
+
+        <!-- Trigger for threshhold -->
+        <iron-scroll-threshold id="scrollThreshold"
+                               scroll-target="mainScreen"
+                               lower-threshold="500"
+                               lower-triggered="{{lowerTriggered}}"
+                               on-lower-threshold="loadMoreData">
+        </iron-scroll-threshold>
+
+    </template>
+
+    <script>
+        class MyAI extends AIVM(Polymer.Element, AiModel, Configuration) {
+            static get is() { return 'my-ai'; }
+
+            static get properties() {
+                return {
+                    aiItems: {
+                        type: Array
+                    },
+                    counter: {
+                        type: Array,
+                        value: [1,2,3,4]
+                    },
+                    mergeUsers: {
+                        type: Array,
+                        observer: '_onAiModelChange'
+                    },
+                    // Request helpers
+                    limit:{
+                        type: Number,
+                        value: 15
+                    },
+                    from:{
+                        type:Number,
+                        value:0
+                    },
+                    isFirstAi:{
+                        type:Boolean,
+                        value:true
+                    }
+                }
+            }
+
+            ready(){
+                super.ready();
+                this.$.skeletonScreen.style = "display: block;";
+                this.$.mainScreen.style = "display: none;";
+                this.$.loader.style = "display: block;";
+                this.mergeUsers = [];
+                //this.bind(this.$.aiList, this.$.ironAjax, this.limit, this.from);
+            }
+
+            loadMoreData() {
+                console.log('load more');
+                // Simulate network delay
+                this.bind(this.$.ironAjax, this.limit, this.from);
+                this.$.scrollThreshold.clearTriggers();
+            }
+        }
+
+        window.customElements.define(MyAI.is, MyAI);
+    </script>
+</dom-module>

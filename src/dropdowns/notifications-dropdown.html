@@ -1,0 +1,96 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+<!-- Imports -->
+<link rel="import" href="../items/notification-drop-down-item.html">
+
+<dom-module id="notifications-dropdown">
+    <template>
+        <style>
+
+            a {
+                text-decoration: none;
+                color: #BDBDBD;
+            }
+
+            #notificationsContainer {
+                width: 250px;
+                margin: 0 auto;
+                padding: 10px;
+                border-radius: 0px !important;
+                background-color: #fafafa;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            }
+
+            #viewAll {
+                padding: 10px 0 0 0;
+                margin:0;
+                text-align: center;
+                font-size: 12px;
+                color: #212121 !important;
+                font-weight: 400;
+                cursor: pointer;
+            }
+
+            #viewAll:hover {
+                font-weight: 500 !important;
+            }
+
+            notification-drop-down-item {
+                /*padding: 10px 0px 10px 0px;*/
+            }
+
+        </style>
+
+        <div id="notificationsContainer">
+
+            <!-- Notification Items -->
+            <template is="dom-repeat" items="[[notificationItems]]" as="notificationItem">
+                <notification-drop-down-item entry="[[notificationItem]]"></notification-drop-down-item>
+            </template>
+
+            <a href="/notifications"> <p id="viewAll" on-click="_closeNotificationDropdown">View all</p></a>
+        </div>
+
+
+    </template>
+    <script>
+
+        class NotificationsDropdown extends Polymer.Element {
+            static get is() { return 'notifications-dropdown'; }
+
+            static get properties(){
+                return {
+                    notificationItems:{
+                        type:Array,
+                        value:function(){
+                            return [
+                                {
+                                    "id":1,
+                                    "image":"https://avatars1.githubusercontent.com/u/11782966?s=460&v=4",
+                                    "title":"Title",
+                                    "body":"Body"
+                                },
+                                {
+                                    "id":1,
+                                    "image":"https://avatars1.githubusercontent.com/u/11782966?s=460&v=4",
+                                    "title":"Title",
+                                    "body":"Body"
+                                }
+                            ];
+                        }
+                    }
+                }
+            }
+
+            _closeNotificationDropdown(){
+                console.log("Closing dropdown...");
+                this.dispatchEvent(new CustomEvent('close-notification-dropdown', {bubbles: true, composed: true}));
+            }
+
+
+        }
+
+        window.customElements.define(NotificationsDropdown.is, NotificationsDropdown);
+    </script>
+</dom-module>

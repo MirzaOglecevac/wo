@@ -1,0 +1,417 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="my-icons.html">
+
+<!-- Imports -->
+<link rel="lazy-import" href="my-statistics.html">
+<link rel="lazy-import" href="my-user.html">
+<link rel="lazy-import" href="my-userdetail.html">
+<link rel="lazy-import" href="my-content.html">
+<link rel="lazy-import" href="my-suggestion.html">
+<link rel="lazy-import" href="my-notifications.html">
+<link rel="lazy-import" href="my-ai.html">
+<link rel="lazy-import" href="my-settings.html">
+<link rel="lazy-import" href="my-view404.html">
+
+<!-- Imports > Settings -->
+<link rel="lazy-import" href="my-policy.html">
+<link rel="lazy-import" href="my-addpolicy.html">
+<link rel="lazy-import" href="my-users.html">
+<link rel="lazy-import" href="my-help.html">
+<link rel="lazy-import" href="my-monolog.html">
+
+<!-- Items -->
+<link rel="import" href="items/item-card.html">
+
+<!-- Drop downs -->
+<link rel="import" href="dropdowns/notifications-dropdown.html">
+<link rel="import" href="dropdowns/user-dropdown.html">
+
+<!-- Dialogs -->
+<link rel="import" href="dialogs/are-you-sure-dialog.html">
+<link rel="import" href="dialogs/social-network-dialog.html">
+
+<!-- JS -->
+<script src="background/core/requestHandler.js"></script>
+
+<dom-module id="my-app">
+  <template >
+    <style>
+      :host {
+        --app-primary-color: #424242;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+
+      .logo > img{
+        height: 35px;
+        position: absolute;
+        top: 50%;
+        transform: translate(0%, -50%);
+        -ms-transform: translate(0%, -50%); /* IE 9 */
+        -webkit-transform: translate(0%, -50%); /* Chrome, Safari, Opera */
+      }
+
+      app-drawer > app-toolbar{
+        border-bottom: 1px solid #F5F5F5;
+      }
+
+      app-drawer {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      }
+
+      app-header-layout {
+        position: relative;
+      }
+
+      notifications-dropdown,user-dropdown {
+        display: none;
+        position:fixed;
+        right:15px;
+        top:64px;
+      }
+
+      /* Dialogs */
+
+      #dialog {
+        width: 50%;
+        min-width: 400px;
+      }
+
+    </style>
+
+    <app-location
+        route="{{route}}"
+        url-space-regex="^[[rootPath]]">
+    </app-location>
+
+    <app-route
+        route="{{route}}"
+        pattern="[[rootPath]]:page"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
+
+
+    <app-drawer-layout fullbleed narrow="{{narrow}}">
+      <!-- Drawer content -->
+      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]" on-click="_dimiss">
+        <app-toolbar on-click="_dimiss">
+          <div class="logo"><img src="../images/logo.png"></div>
+        </app-toolbar>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+
+          <template id="sideMenu" is="dom-repeat" items="[[menuItems]]" as="menuItem">
+            <template is="dom-if" if="{{menuItem.menu}}">
+              <item-card entry="[[menuItem]]"></item-card>
+            </template>
+          </template>
+
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header slot="header" condenses fixed>
+          <app-toolbar >
+
+            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+            <span main-title>{{title}}</span>
+            <paper-icon-button icon="social:notifications" on-click="_notificationsDropdown"></paper-icon-button>
+            <paper-icon-button icon="icons:account-circle" on-click="_notificationsDropdownAdmin"></paper-icon-button>
+
+            <notifications-dropdown id="dropDown"></notifications-dropdown>
+            <user-dropdown id="dropDownAdmin" entry="[[userData]]"></user-dropdown>
+
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            role="main" on-click="_dimiss">
+          <my-statistics name="statistics"></my-statistics>
+          <my-user name="user" path="[[routePath]]"></my-user>
+          <my-userdetail name="userdetail" route="[[subroute]]"></my-userdetail>
+          <my-content name="content"></my-content>
+          <my-suggestion name="suggestion"></my-suggestion>
+          <my-notifications name="notifications"></my-notifications>
+          <my-ai name="ai"></my-ai>
+          <my-settings name="settings"></my-settings>
+          <my-view404 name="view404"></my-view404>
+          <!-- Settings -->
+          <my-policy name="policy"></my-policy>
+          <my-addpolicy name="addpolicy"></my-addpolicy>
+          <my-users name="users"></my-users>
+          <my-help name="help"></my-help>
+          <my-monolog name="monolog"></my-monolog>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+
+    <!-- Dialog -->
+    <paper-dialog id="dialog" modal raised>
+      <are-you-sure-dialog entry="[[dialogData]]"></are-you-sure-dialog>
+    </paper-dialog>
+
+
+  </template>
+
+  <script>
+    // Gesture events like tap and track generated from touch will not be
+    // preventable, allowing for better scrolling performance.
+    Polymer.setPassiveTouchGestures(true);
+
+    class MyApp extends Polymer.Element {
+      static get is() { return 'my-app'; }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          routeData: Object,
+          subroute: Object,
+           dialogData: Object,
+          rootPath: String,
+          title:{
+              type: String,
+              value: "",
+              notify: true
+          },
+          menuItems:{
+              type:Array,
+              value :[]
+          },
+          generalMenuItems:{
+            type:Array,
+            value : function(){return [
+                {"title":"Statistics","image":"icons:timeline","href":"statistics","menu":true},
+                {"title":"User","image":"icons:account-circle","href":"user","menu":true},
+                {"title":"Content","image":"icons:view-column","href":"content","menu":true},
+                {"title":"Suggestion","image":"icons:dns","href":"suggestion","menu":true},
+                {"title":"AI","image":"icons:donut-small","href":"ai","menu":true},
+                {"title":"Settings","image":"icons:settings","href":"settings","menu":true},
+                {"title":"Notifications","image":null,"href":"notifications","menu":false}
+            ];}
+          },
+          settingsMenuItems:{
+              type:Array,
+              value: function(){
+                  return [
+                      {"title":"Main Menu","image":"icons:arrow-back","href":"statistics","menu":true},
+                      {"title":"Monolog","image":"icons:bug-report","href":"monolog","menu":true},
+                      {"title":"Users","image":"icons:supervisor-account","href":"users","menu":true},
+                      {"title":"Policy","image":"icons:chrome-reader-mode","href":"policy","menu":true},
+                      {"title":"Help","image":"icons:help-outline","href":"help","menu":true},
+                  ];
+              }
+          },
+          userData:{
+              type:Object,
+              value:function(){return [
+                      {
+                          "token":"jdsnfkajnfa8dsf7hbad7bfas68bfgdb76",
+                          "name":"Arslan",
+                          "surname":"Hajdarevic",
+                          "email":"terminatorarslan@gmail.com",
+                          "scope":"admin",
+                          "image":"https://d1qb2nb5cznatu.cloudfront.net/users/6405658-large?1497736626"
+                      }
+                  ];
+              }
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      ready() {
+          super.ready();
+
+
+
+          this.menuItems = this.generalMenuItems;
+          this._eventListeners();
+      }
+
+      _routePageChanged(page) {
+        this.page = page || 'statistics';
+
+        for(var i = 0;i < this.menuItems.length;i++){
+
+            if(this.menuItems[i].href === page){
+                this.title = this.menuItems[i].title;
+
+                if(page === 'settings' || page === 'monolog' || page === 'users' || page === 'policy' || page === 'help'){
+                    this.menuItems = this.settingsMenuItems;
+                    this.$.sideMenu.render();
+                }else{
+                    this.menuItems = this.generalMenuItems;
+                    this.$.sideMenu.render();
+                }
+            }
+
+        }
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+        const resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+
+        Polymer.importHref(
+            resolvedPageUrl,
+            null,
+            this._showPage404.bind(this),
+            true);
+      }
+
+      _showPage404() {
+        this.page = 'view404';
+      }
+
+      _openDialog() {
+          this.$.dialog.open();
+      }
+
+      _closeDialog() {
+          this.$.dialog.close();
+      }
+
+        _confirmDialog(){
+            // make something
+
+            // then close the dialog
+            this._closeDialog();
+        }
+
+      _dimiss() {
+          this.$.dropDown.style = "display: none;";
+          this.$.dropDownAdmin.style = "display: none;";
+      }
+
+      _notificationsDropdown() {
+          if(this.$.dropDown.style.display === 'block'){
+              this.$.dropDown.style = "display: none;";
+          }else{
+              this.$.dropDown.style = "display: block;";
+          }
+          this.$.dropDownAdmin.style = "display: none;";
+      }
+
+      _notificationsDropdownAdmin() {
+          if(this.$.dropDownAdmin.style.display === 'block'){
+              this.$.dropDownAdmin.style = "display: none;";
+          }else{
+              this.$.dropDownAdmin.style = "display: block;";
+          }
+          this.$.dropDown.style = "display: none;";
+      }
+
+        /**
+         * Setup Event Listeners
+         */
+
+        _eventListeners()
+        {
+            console.log("Inside event listeners.");
+            // listeners for "are-you-sure" dialogs
+            this.addEventListener('delete-user', (e) => this._openModal(e));
+            this.addEventListener('verify-user', (e) => this._openModal(e));
+            this.addEventListener('close-report', (e) => this._openModal(e));
+            this.addEventListener('delete-content', (e) => this._openModal(e));
+            this.addEventListener('merge-profiles', (e) => this._openModal(e));
+            this.addEventListener('delete-user-admin', (e) => this._openModal(e));
+            this.addEventListener('notification-seen', (e) => this._openModal(e));
+
+            // listeners for "social-network" dialogs
+            this.addEventListener('open-social-dialog', (e) => this._openModal(e));
+
+            // listener for "external link" dialogs
+            this.addEventListener('open-external-dialog', (e) => this._openModal(e));
+
+            //listener for "change person" dialog
+            this.addEventListener('change-person', (e) => this._openModal(e));
+
+            //listeners to close dialog
+            this.addEventListener('confirm-dialog', (e) => this._confirmDialog());
+            this.addEventListener('close-dialog', (e) => this._closeDialog());
+
+            //listeners for closing dropdowns
+            this.addEventListener('close-notification-dropdown', () => this._dimiss());
+
+
+        }
+
+        /* Functions for event listeners */
+
+        _openModal(e){
+            this.dialogData = e.detail;
+            this._openDialog();
+        }
+
+
+
+    }
+
+    window.customElements.define(MyApp.is, MyApp);
+  </script>
+</dom-module>

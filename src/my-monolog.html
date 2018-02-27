@@ -1,0 +1,88 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Items -->
+<link rel="import" href="items/monolog-card.html">
+<link rel="import" href="loaders/monolog-loader/monolog-loader.html">
+
+<dom-module id="my-monolog">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+                cursor: default;
+            }
+
+            /* Style loader */
+
+            monolog-loader {
+                --loader-background: #E0E0E0;
+                --loader-color: #bbb;
+            }
+
+        </style>
+
+        <iron-request id="ironAjax"></iron-request>
+
+        <div class="emptyCard">
+
+            <div id="loadingScreen">
+                <monolog-loader></monolog-loader>
+            </div>
+
+            <div id="mainScreen">
+                <monolog-card entry="[[logs]]"></monolog-card>
+            </div>
+
+
+        </div>
+    </template>
+
+    <script>
+        class MyMonolog extends Polymer.Element {
+            static get is() { return 'my-monolog'; }
+
+            static get properties(){
+                return {
+                    monologItems: {
+                        type:Array,
+                        observer: '_onMonologModelChange'
+                    },
+                    logs: {
+                        type: Array,
+                        value: function(){
+                            return [
+                                {
+                                    "level": "Warning",
+                                    "date": "05-05-2012",
+                                    "message": "Text message..."
+                                },
+                                {
+                                    "level": "Error",
+                                    "date": "08-05-2013",
+                                    "message": "Text message..."
+                                },
+                                {
+                                    "level": "Warning",
+                                    "date": "01-02-2012",
+                                    "message": "Text message..."
+                                }
+                            ]
+
+                        }
+                    }
+                }
+            }
+
+            ready() {
+                super.ready();
+                this.$.loadingScreen.style = "display: block;";
+                this.$.mainScreen.style = "display: none;";
+                //this.bind(this.$.statisticsMenu, this.$.ironAjax);
+            }
+        }
+
+        window.customElements.define(MyMonolog.is, MyMonolog);
+    </script>
+</dom-module>

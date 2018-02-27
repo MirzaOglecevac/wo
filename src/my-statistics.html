@@ -1,0 +1,148 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Scripts -->
+<script src="background/viewModels/statisticsVM.js"></script>
+<script src="background/models/statisticsModel.js"></script>
+<script src="background/core/configuration.js"></script>
+
+<!-- Items -->
+<link rel="import" href="items/statistics-item.html">
+<link rel="import" href="loaders/statistics-loader/statistics-loader.html">
+
+
+<dom-module id="my-statistics">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            #mainList,  #skeletonScreen{
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                object-fit: contain;
+            }
+
+           #mainList > statistics-item, #skeletonScreen > statistics-loader {
+                margin: 0 10px 10px 0;
+            }
+
+            /* Style loader */
+
+            statistics-loader {
+                --loader-background: #E0E0E0;
+                --loader-color: #bbb;
+            }
+
+            .fade {
+                opacity: 1;
+                animation-name: fadeInOpacity;
+                animation-iteration-count: 1;
+                animation-timing-function: ease-in;
+                animation-duration: 1s;
+            }
+
+            @keyframes fadeInOpacity {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+
+
+        </style>
+
+        <!-- HTTP Request -->
+        <iron-ajax
+                auto
+                id="ironAjax"></iron-ajax>
+
+        <div id="skeletonScreen">
+           <template is="dom-repeat" items="[[counter]]">
+                <statistics-loader></statistics-loader>
+            </template>
+        </div>
+
+        <div id="mainList" class="fade">
+             <template id="statisticsMenu" is="dom-repeat" items="[[statisticItems]]" as="statisticItem">
+                <statistics-item entry="[[statisticItem]]"></statistics-item>
+            </template>
+        </div>
+
+
+    </template>
+
+    <script>
+        class MyStatistics extends StatisticsVM(Polymer.Element, StatisticsModel, Configuration){
+
+            static get is() { return 'my-statistics'; }
+
+            static get properties() {
+                return {
+                    statisticItems: {
+                        type:Array,
+                        observer: '_onStatisticsModelChange'
+                    },
+                    counter: {
+                        type: Array,
+                        value: [1,2,3,4,5,6,7,8,9,10]
+                    }
+                     // testItems: {
+                     //    type: Array,
+                     //    value: function () {
+                     //        return [
+                     //            {
+                     //                "number": 520,
+                     //                "description": "Prvi card",
+                     //                "color": "#ff0000"
+                     //            },
+                     //            {
+                     //                "number": 350,
+                     //                "description": "Drugi card",
+                     //                "color": "#00ff00"
+                     //            },
+                     //            {
+                     //                "number": 520,
+                     //                "description": "Prvi card",
+                     //                "color": "#ff0000"
+                     //            },
+                     //            {
+                     //                "number": 350,
+                     //                "description": "Drugi card",
+                     //                "color": "#00ff00"
+                     //            },
+                     //            {
+                     //                "number": 770,
+                     //                "description": "Treci card",
+                     //                "color": "#0000ff"
+                     //            },
+                     //            {
+                     //                "number": 770,
+                     //                "description": "Treci card",
+                     //                "color": "#0000ff"
+                     //            }
+                     //        ]
+                     //    }
+                    //}
+
+                }
+            }
+
+            ready() {
+                super.ready();
+                this.$.skeletonScreen.style = "display: flex;";
+                this.$.mainList.style = "display: none;";
+                this.bind(this.$.statisticsMenu, this.$.ironAjax);
+            }
+
+        }
+
+        window.customElements.define(MyStatistics.is, MyStatistics);
+    </script>
+</dom-module>

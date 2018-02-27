@@ -1,0 +1,135 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<dom-module id="merge-card">
+  <template>
+    <style>
+      
+	  #merge {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 100%;
+		min-width: 350px;
+		padding: 10px;
+		margin: 0 auto;
+		border-radius: 5px;
+		box-sizing: border-box;
+		background-color: #fff;
+		margin-bottom: 15px;
+		box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+	  }
+	   
+	   #merge > #mergedProfiles {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	   }
+	   
+	   
+	   #merge > div >.leftSide,  #merge > div > .rightSide{
+		display: flex;
+		flex-direction: row;
+	   }
+
+	  #merge > div > .rightSide{
+		  display: flex;
+		  flex-direction: row-reverse;
+	  }
+
+	  #merge > div > .leftSide iron-image, #merge > div > .rightSide iron-image{
+			display: inline-block;
+			--iron-image-width: 115px;
+			--iron-image-height: 115px;
+			margin: 0 10px;
+			border-radius: 50%;
+	   }
+	   
+	   #merge .rightSide > div, #merge .leftSide > div {
+		padding-right: 10px;
+	   }
+	   
+	   #merge p {
+		 color: #BDBDBD;
+		 font-family: "Roboto";
+		 font-weight: 400;
+		 padding: 5px 0 0 0;
+		 margin: 0;
+	   }
+	   
+	   #merge > p {
+		margin-top: 20px;
+		margin-right: 20px;
+		font-weight: 700;
+		align-self: flex-end;
+		color: #212121;
+	   }
+	   
+	   #merge > p:hover {
+		cursor: pointer;
+		color: #03A9F4;
+	   }
+
+		.leftSide > div > p:first-child, .rightSide > div > p:first-child {
+			color: #212121 !important;
+			font-family: "Roboto";
+			font-weight: 500 !important;
+		}
+	  
+    </style>
+
+	<div id="merge">
+		
+		<div id="mergedProfiles">
+			<div class="leftSide">
+				<iron-image id="profileImage1" src$={{entry.parent.social_accounts.0.profile_image}} alt="Not Found"></iron-image>
+				<div>
+					<p>{{entry.parent.full_name}}</p>
+					<p>{{entry.parent.social_accounts.0.followers}}</p>
+					<p>{{entry.parent.social_accounts.0.type}}</p>
+					<p>Verified {{entry.parent.social_accounts.0.verified}}</p>
+				</div>
+			</div>
+			
+			<div class="rightSide">
+				<iron-image id="profileImage2" src$={{entry.child.social_accounts.0.profile_image}} alt="Not Found"></iron-image>
+				<div>
+					<p>{{entry.child.full_name}}</p>
+					<p>{{entry.child.social_accounts.0.followers}}</p>
+					<p>{{entry.child.social_accounts.0.type}}</p>
+					<p>Verified {{entry.parent.social_accounts.0.verified}}</p>
+				</div>
+			</div>
+		</div>	
+		
+		<p on-click="_mergeProfiles">Merge</p>
+		
+	</div>
+
+	
+	</template>
+  <script>
+    
+    class MergeCard extends Polymer.Element {
+      static get is() { return 'merge-card'; }
+	  
+	  static get properties(){
+		return {
+			entry:Object
+		}
+	  }
+
+        _mergeProfiles(){
+            this.dispatchEvent(new CustomEvent('merge-profiles', {
+                bubbles: true, composed: true, detail: {
+                    areYouSure: "yes",
+                    text: "Are you sure you want to merge these two profiles?"
+                }}));
+        }
+      
+    }
+
+    window.customElements.define(MergeCard.is, MergeCard);
+  </script>
+</dom-module>

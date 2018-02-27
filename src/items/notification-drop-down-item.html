@@ -1,0 +1,101 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+<dom-module id="notification-drop-down-item">
+    <template>
+        <style>
+
+            #notification {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 250px;
+                margin: 0 auto;
+                padding: 10px;
+                border-radius: 5px !important;
+                box-sizing: border-box;
+                background-color: #fff;
+                margin-top: 15px;
+                box-shadow: 0px 3px 3px rgba(180,180,180, 0.6), 0px -1px 1px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+                cursor: pointer;
+            }
+
+            .leftSide {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .leftSide > iron-image {
+                display: inline-block;
+                --iron-image-width: 50px;
+                --iron-image-height: 50px;
+                margin: 0 10px;
+                border-radius: 50%;
+            }
+
+            .userInfo > p {
+                padding: 0;
+                margin: 0;
+                font-family: "Roboto";
+                font-size: 16px;
+                color: #212121;
+            }
+
+            p:nth-child(2) {
+                font-weight: 400 !important;
+                color: #BDBDBD;
+            }
+
+            .rightSide {
+                cursor: pointer;
+            }
+
+            iron-icon {
+                color:#BDBDBD;
+            }
+
+        </style>
+
+        <div id="notification" on-click="_openNotification">
+            <div class="leftSide">
+                <iron-image src$={{entry.image}} alt="Not Found"></iron-image>
+                <div class="userInfo">
+                    <p>{{entry.title}}</p>
+                    <p>{{entry.body}}</p>
+                </div>
+            </div>
+
+            <div class="rightSide">
+                <iron-icon icon="icons:clear" on-click="_dimisssNotification"></iron-icon>
+            </div>
+        </div>
+
+
+    </template>
+    <script>
+
+        class NotificationsDropDownItem extends Polymer.Element {
+            static get is() { return 'notification-drop-down-item'; }
+
+            static get properties(){
+                return {
+                    entry:Object
+                }
+            }
+
+            _dimisssNotification() {
+                console.log('dimiss notification');
+            }
+
+            _openNotification() {
+                console.log('Open notification');
+                this.dispatchEvent(new CustomEvent('close-notification-dropdown', {bubbles: true, composed: true}));
+            }
+
+        }
+
+        window.customElements.define(NotificationsDropDownItem.is, NotificationsDropDownItem);
+    </script>
+</dom-module>

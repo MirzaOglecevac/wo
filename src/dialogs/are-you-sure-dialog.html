@@ -1,0 +1,171 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-search/paper-search-bar.html">
+<link rel="import" href="../shared-styles.html">
+
+<!-- Items -->
+<link rel="import" href="../items/user-card.html">
+<link rel="import" href="../items/user-card-without-link.html">
+
+<dom-module id="are-you-sure-dialog">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            p {
+                font-weight:  bold;
+            }
+
+            .button-holder{
+                float: right;
+                padding-bottom: 10px;
+            }
+
+            paper-button.yes {
+                background-color: var(--paper-deep-orange-a700);
+                color: white;
+            }
+
+            paper-search-bar {
+                width:  100%;
+                box-shadow: 0px 2px 2px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6);
+                margin-bottom: 10px;
+            }
+
+            /* Style for external dialog */
+
+            .externalDialog {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 0 0 -20px 0;
+                padding:10px 0 0 0;
+            }
+
+            .externalDialog > *{
+                 margin: 0 0 15px 0;
+             }
+
+            .externalDialog > .button-holder{
+                padding: 0 !important;
+            }
+
+            .externalDialog > .button-holder > paper-button{
+                padding: 5px !important;
+            }
+
+            .externalDialog > input{
+                border-radius: 5px;
+                border: 1px solid #888;
+                padding: 5px;
+                width: 70%;
+            }
+
+            #userList {
+                height: 385px;
+                overflow: auto;
+            }
+
+
+        </style>
+
+        <div>
+
+            <!-- for "are you sure" dialogs -->
+            <template is="dom-if" if="{{entry.areYouSure}}">
+
+                <p>[[entry.text]]</p>
+                <div class="button-holder">
+                    <paper-button on-click="_no">No</paper-button>
+                    <paper-button class="yes" on-click="_yes">Yes</paper-button>
+                </div>
+
+            </template>
+
+            <!-- for "social network" dialogs -->
+            <template is="dom-if" if="{{entry.socialNetwork}}">
+
+                <user-card entry="[[entry.data]]"></user-card>
+                <paper-search-bar hide-filter-button="true"></paper-search-bar>
+
+                <div class="button-holder">
+                    <paper-button on-click="_no">Cancel</paper-button>
+                    <paper-button class="yes" on-click="_yes">Done</paper-button>
+                </div>
+
+            </template>
+
+            <!-- for "external link" dialogs -->
+            <template is="dom-if" if="{{entry.externalDialog}}">
+                <div class="externalDialog">
+                    <p>Link your web page to {{entry.externalLink}} site.</p>
+                    <input id="externalLinkinput" value="{{entry.linkPlaceholder}}"/>
+                    <div class="button-holder">
+                        <paper-button on-click="_no">Cancel</paper-button>
+                        <paper-button class="yes" on-click="_yes">Done</paper-button>
+                    </div>
+                </div>
+
+            </template>
+
+            <!-- for change user at sugggestions page -->
+            <template is="dom-if" if="{{entry.changePerson}}">
+                <paper-search-bar hide-filter-button="true"></paper-search-bar>
+
+                <div id="userList">
+                    <template id="check" is="dom-repeat" items="[[entry.data]]" as="entry">
+                        <user-card-without-link entry="[[entry]]"></user-card-without-link>
+                    </template>
+                </div>
+
+                <div class="button-holder">
+                    <paper-button on-click="_no">Cancel</paper-button>
+                    <paper-button class="yes" on-click="_yes">Ok</paper-button>
+                </div>
+            </template>
+
+        </div>
+
+
+    </template>
+
+    <script>
+        class SureDialog extends Polymer.Element {
+            static get is() { return 'are-you-sure-dialog'; }
+
+            static get properties(){
+                return {
+                    entry:Object
+                }
+            }
+
+            ready(){
+                super.ready();
+               // this.addEventListener('checkbox-checked', (e) => this._renderList());
+            }
+
+           /* _renderList(){
+                console.log("Rendering");
+                this.$.check.render();
+
+            } */
+
+            _no() {
+                this.dispatchEvent(new CustomEvent('close-dialog', {
+                    bubbles: true, composed: true}));
+            }
+
+            _yes() {
+                this.dispatchEvent(new CustomEvent('confirm-dialog', {
+                    bubbles: true, composed: true}));
+            }
+
+
+        }
+
+        window.customElements.define(SureDialog.is, SureDialog);
+    </script>
+</dom-module>

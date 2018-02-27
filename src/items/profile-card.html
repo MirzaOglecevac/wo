@@ -1,0 +1,440 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+
+<dom-module id="profile-card">
+  <template>
+    <style>
+      
+	  #profile {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			width: 100%;
+			min-width: 350px;
+			padding: 10px;
+			margin: 0 auto;
+			border-radius: 5px;
+			box-sizing: border-box;
+			background-color: #fff;
+			box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+	   }
+
+	   /* User info part */
+	   
+	   #profile > .userInfo {
+		display: flex;
+		justify-content: space-between;
+	   }
+	   
+	   #profile .userInfo .leftSide {
+		 display: flex;
+		 flex-direction: row;
+	   }
+	   
+	   #profile .userInfo .leftSide p {
+		 margin: 0;
+		 padding: 0;
+	   }
+	   
+	   #profile .userInfo .leftSide p:first-child {
+		 font-weight: 500;
+		   color: #212121;
+		   font-family: "Roboto";
+	   }
+
+
+	  .leftSide > div > p {
+		  color: #BDBDBD;
+		  font-family: "Roboto";
+		  font-weight: 400;
+	  }
+	   
+	   #profile #profileImage {
+			display: inline-block;
+			--iron-image-width: 115px;
+			--iron-image-height: 115px;
+			margin: 0 10px;
+			border-radius: 50%;
+	   }
+	   
+	   #profile .userInfo .leftSide .socialIcons .first{
+	     display: inline-block;
+		 margin: 10px 10px 0 0;
+		 cursor: pointer;
+	   }
+
+	   iron-icon {
+		   color: #666;
+		   cursor: pointer;
+	   }
+	   
+	   /* User bio part */
+	   
+	   
+	   /* User links part */
+	   
+	   #profile .userLinks {
+			display: flex;
+			justify-content: space-between;
+		}
+
+	  #profile .userLinks iron-icon {
+		 align-self: flex-end;
+	  }
+	   
+	   #profile .userLinks .buttons {
+		padding-top: 10px;
+		   display: flex;
+		   flex-direction: row;
+	   }
+	   
+	   #profile .userLinks .buttons paper-button {
+		width: 90px;
+		height: 30px;
+		text-transform: none;
+		 color: #212121;
+		font-size: 12px;
+		box-shadow: 0px 2px 2px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6);
+	   }
+	   
+	   #profile .buttons #Patreon {
+		background-color: #E64A19;
+	   }
+	   
+	   #profile .buttons #Shop {
+		background-color: #42A5F5;
+	   }
+
+	  #profile .buttons #ThirdLink {
+		  font-size: 12px;
+		  color: #111;
+	  }
+
+	   #deleteIcon {
+		   padding-bottom: 5px;
+	   }
+
+	   .inactive {
+		   opacity: 0.54 !important;
+	   }
+	   
+	   /* Style for dependencies */
+	   
+	   paper-textarea {
+		padding: 0 10px;
+		margin: 0;
+		font-family: "Roboto";
+		color: #212121;
+	   }
+
+
+	  
+	  
+    </style>
+   
+	
+	<div id="profile">
+		
+		<div class="userInfo">
+			<div class="leftSide">
+				<iron-image id="profileImage" src$={{entry.profileImage}} alt="Not Found"></iron-image>
+				<div>
+					<p>{{entry.full_name}}</p>
+					<p>{{entry.followers}}</p>
+					<p>{{entry.type}}</p>
+
+					<div class="socialIcons">
+						<div class="first">
+							<div id="facebook" on-click="_openSocialDialog" style="
+										width: 22px;
+										height: 22px;
+										background-color: #666;
+										-webkit-mask-image: url('../images/icons/facebook.svg');
+										-webkit-mask-size: 22px;">
+							</div>
+						</div>
+
+						<div class="first">
+							<div id="instagram" on-click="_openSocialDialog" style="
+										width: 22px;
+										height: 22px;
+										background-color: #666;
+										-webkit-mask-image: url('../images/icons/instagram.svg');
+										-webkit-mask-size: 22px;">
+							</div>
+						</div>
+
+						<div class="first">
+							<div id="twitter" on-click="_openSocialDialog" style="
+									width: 22px;
+									height: 22px;
+									background-color: #666;
+									-webkit-mask-image: url('../images/icons/twitter.svg');
+									-webkit-mask-size: 22px;">
+							</div>
+						</div>
+						<div class="first">
+							<div id="youtube" on-click="_openSocialDialog" style="
+									width: 22px;
+									height: 22px;
+									background-color: #666;
+									-webkit-mask-image: url('../images/icons/youtube.svg');
+									-webkit-mask-size: 22px;">
+							</div>
+						</div>
+					</div>
+
+					<template is="dom-repeat" items="[[entry.social_accounts]]" as="item">
+						<template is="dom-if" if="{{_checkSocial(item.type)}}"></template>
+					</template>
+
+				</div>
+			</div>
+
+			<div class="rightSide">
+				<iron-icon icon="check-circle" on-click="_verifyUser"></iron-icon>
+			</div>
+
+		</div>
+		
+		<div class="userBio">
+			<paper-textarea value="{{entry.bio}}"></paper-textarea>
+		</div>
+		
+		<div class="userLinks">
+		  <div class="buttons">
+
+			 <template is="dom-if" if="{{entry.external.patreon}}">
+				 <paper-button id="Patreon" on-click="_openExternalLinkDialog">
+					 <div id="patreonIcon" style="
+								width: 22px;
+								height: 22px;
+								background-color: #fff;
+								-webkit-mask-image: url('../images/icons/patreon.svg');
+								-webkit-mask-size: 22px;">
+					 </div>
+				 </paper-button>
+			 </template>
+
+			  <template is="dom-if" if="{{!entry.external.patreon}}">
+				  <paper-button id="Patreon"  on-click="_openExternalLinkDialog"class="inactive">
+					  <div id="patreonIcon" style="
+								width: 22px;
+								height: 22px;
+								background-color: #fff;
+								-webkit-mask-image: url('../images/icons/patreon.svg');
+								-webkit-mask-size: 22px;">
+					  </div>
+				  </paper-button>
+			  </template>
+
+
+			  <template is="dom-if" if="{{entry.external.shop}}">
+				  <paper-button id="Shop" on-click="_openExternalLinkDialog">
+					  <div id="shopIcon" style="
+								width: 22px;
+								height: 22px;
+								background-color: #fff;
+								-webkit-mask-image: url('../images/icons/shop.svg');
+								-webkit-mask-size: 22px;">
+					  </div>
+				  </paper-button>
+			  </template>
+
+			  <template is="dom-if" if="{{!entry.external.shop}}">
+				  <paper-button id="Shop" on-click="_openExternalLinkDialog" class="inactive">
+					  <div id="shopIcon" style="
+								width: 22px;
+								height: 22px;
+								background-color: #fff;
+								-webkit-mask-image: url('../images/icons/shop.svg');
+								-webkit-mask-size: 22px;">
+					  </div>
+				  </paper-button>
+			  </template>
+
+
+			 <template is="dom-if" if="{{entry.external.other}}">
+				<paper-button class="thirdLink" on-click="_openExternalLinkDialog" id="ThirdLink">{{_extractHostname(entry.external.other)}}</paper-button>
+			 </template>
+
+			  <template is="dom-if" if="{{!entry.external.other}}">
+				  <paper-button class="thirdLink" on-click="_openExternalLinkDialog" id="ThirdLink">
+					  <!-- <iron-image id="addIcon" src="../../images/icons/add.svg"></iron-image> -->
+					  <div id="addIcon" style="
+								width: 22px;
+								height: 22px;
+								background-color: #555;
+								-webkit-mask-image: url('../images/icons/add.svg');
+								-webkit-mask-size: 22px;">
+					  </div>
+				  </paper-button>
+			  </template>
+
+		  </div>
+			<iron-icon id="deleteIcon" icon="delete" on-click="_deleteUser"></iron-icon>
+		</div>
+		
+	</div>
+	
+	
+	
+	</template>
+  <script>
+    
+    class ProfileCard extends Polymer.Element {
+      static get is() { return 'profile-card'; }
+	  
+	  static get properties(){
+		return {
+
+			image: {
+				type: String,
+				value: "/bower_components/content-card/homer.jpg"
+			},
+			username: {
+				type: String,
+				value: "Username"
+			},
+			followers: {
+				type: String,
+				value: "Followers"
+			},
+			type: {
+				type: String,
+				value: "Type"
+			},
+			userBio: {
+				type: String,
+				value: "User Bio"
+			}
+			
+		}
+	  }
+
+        _verifyUser(){
+            this.dispatchEvent(new CustomEvent('verify-user', {
+                bubbles: true, composed: true, detail: {
+                    areYouSure: "yes",
+                    text: "Are you sure you want to mark this user as verified?"
+                }}));
+        }
+
+        _openSocialDialog(event){
+
+          	var socialNetworkName = event.target.id;
+            this.dispatchEvent(new CustomEvent('open-social-dialog', {
+                bubbles: true, composed: true, detail: {
+                    socialDialog: "yes",
+					socialNetwork: socialNetworkName,
+					data: {
+                        image: "https://pixel.nymag.com/imgs/fashion/daily/2017/10/02/02-Rupi-Kaur.w512.h600.2x.jpg",
+						reported: null,
+						full_name: "Azrim",
+                        social_accounts_folllowers: 150000,
+						searchCard: null,
+						logo: socialNetworkName
+					}
+             }}));
+        }
+
+        _openExternalLinkDialog(event){
+
+            var externalLinkName = event.currentTarget.id;
+            var link;
+
+            switch(externalLinkName){
+
+                case "Patreon":
+                    if(!this.entry.external.patreon){
+                        link = "http://www.example-patreon.com";
+                    }
+                    else {
+                        link = this.entry.external.patreon;
+                    }
+                    break;
+                case "Shop":
+                    if(!this.entry.external.shop){
+                        link = "http://www.example-shop.com";
+                    }
+                    else {
+                        link = this.entry.external.shop;
+                    }
+                    break;
+                case "ThirdLink":
+                    if(!this.entry.external.other){
+                        link = "http://www.example-thirdlink.com";
+                    }
+                    else {
+                        link = this.entry.external.other;
+                    }
+                    break;
+            }
+
+
+            console.log("External Dialog Opened.");
+            console.log(link);
+
+            this.dispatchEvent(new CustomEvent('open-external-dialog', {
+                bubbles: true, composed: true, detail: {
+                    externalDialog: "yes",
+                    externalLink: externalLinkName,
+                    linkPlaceholder: link
+                }}));
+        }
+
+        _deleteUser(){
+            this.dispatchEvent(new CustomEvent('delete-user', {
+                bubbles: true, composed: true, detail: {
+                    areYouSure: "yes",
+                    text: "Are you sure you want to delete this user?"
+                }}));
+        }
+
+        // extract host name
+        _extractHostname(url) {
+            var hostname;
+            //find & remove protocol (http, ftp, etc.) and get hostname
+
+            if (url.indexOf("://") > -1) {
+                hostname = url.split('/')[2];
+                hostname = hostname.slice(4)
+            }
+            else {
+                hostname = url.split('/')[0];
+            }
+
+            //find & remove port number
+            hostname = hostname.split(':')[0];
+            //find & remove "?"
+            hostname = hostname.split('?')[0];
+
+            return hostname;
+        }
+
+        _checkSocial(item){
+          if(item == "INSTA"){
+              this.$.instagram.style="background-color: #fbad50; width: 22px; height: 22px; -webkit-mask-image: url('../images/icons/instagram.svg'); ";
+              return true;
+		  }else if(item == "FB"){
+              this.$.facebook.style="background-color: #3b5998; width: 22px; height: 22px; -webkit-mask-image: url('../images/icons/facebook.svg'); ";
+              return true;
+          }else if(item == "YOUT"){
+              this.$.youtube.style="background-color: #ff0000; width: 22px; height: 22px; -webkit-mask-image: url('../images/icons/youtube.svg'); ";
+              return true;
+          }else if(item == "TWIT"){
+              this.$.twitter.style="background-color: #1dcaff; width: 22px; height: 22px; -webkit-mask-image: url('../images/icons/twitter.svg'); ";
+              return true;
+          }
+		}
+
+    }
+
+    window.customElements.define(ProfileCard.is, ProfileCard);
+  </script>
+</dom-module>

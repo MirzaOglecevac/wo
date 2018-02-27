@@ -1,0 +1,142 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!--
+`list-item`
+
+ES6 Polymer 2 list item with a skeleton loader
+
+### Styling
+`<list-item>` provides the following custom properties and mixins
+for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--text-color` | Headline text color | #212121
+`--secondary-text-color` | Body text color | #737373
+`--loader-background` | Bg color of skeleton text | #eeeeee
+`--loader-color` | Bg color of moving loader | #f5f5f5
+
+@customElement
+@demo demo/index.html
+@polymer
+-->
+
+<dom-module id="users-loader">
+  <template>
+    <style>
+
+
+
+
+      .animate {
+        -webkit-animation: gradient-slide 2.2s ease infinite;
+        animation: gradient-slide 2.2s ease infinite;
+        background: 0 0/300% 300% linear-gradient(-61deg, var(--loader-background, #eeeeee) 40%, var(--loader-color, #f5f5f5) 50%, var(--loader-background, #eeeeee) 60%);
+      }
+      @keyframes gradient-slide{
+        0% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+        .user {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            min-width: 350px;
+            padding: 10px;
+            margin: 0 auto;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+            cursor: pointer;
+        }
+
+        .leftSide {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .leftSide > p {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin: 0 10px;
+            border-radius: 50%;
+            background-color: #d0d0d0;
+        }
+
+        .userInfo > p {
+            color: #BDBDBD;
+            font-family: "Roboto";
+            font-weight: 400;
+            width: 90px;
+            height: 15px;
+            background-color: #d0d0d0;
+            padding: 0;
+            margin: 0;
+        }
+
+      .userInfo > p:nth-child(2) {
+          margin-top: 5px;
+          width: 70px !important;
+      }
+
+        p:first-child {
+            font-family: "Roboto";
+            font-weight: 500;
+            color: #212121;
+        }
+
+
+    </style>
+
+    <a href="">
+      <div class="user">
+          <div class="leftSide">
+
+              <p class="animate"></p>
+
+              <div class="userInfo">
+                  <p class="animate"></p>
+                  <p class="animate" ></p>
+              </div>
+          </div>
+      </div>
+    </a>
+
+  </template>
+  <script>
+    class UsersLoader extends Polymer.Element {
+      static get is() { return 'users-loader'; }
+      static get properties() {
+        return {
+          // Optional header text
+          headline: {
+            type: String,
+            value: ""
+          },
+          // Optional body text
+          text: {
+            type: String,
+            value: ""
+          },
+          // Optional href
+          href: {
+            type: String
+          },
+          // When loading is true, a skeleton loader is shown
+          loading: {
+            type: Boolean,
+            value: true
+          }
+        };
+      }
+    }
+
+    window.customElements.define(UsersLoader.is, UsersLoader);
+  </script>
+</dom-module>

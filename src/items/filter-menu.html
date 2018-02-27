@@ -1,0 +1,73 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+<!-- Items -->
+<link rel="import" href="filter-item.html">
+
+<dom-module id="filter-menu">
+  <template>
+    <style>
+      
+	  
+	  #filter {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			width: 150px;
+		    height: 100%;
+			padding: 10px;
+			margin: 0 auto;
+			box-sizing: border-box;
+			background-color: #fff;
+		    position: fixed;
+		  	top: 64px;
+		    right: 0;
+			box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+		}
+
+		.menuItems {
+			color: #212121;
+			font-family: "Roboto";
+			font-weight: 500;
+			text-align:  justify;
+			padding: 0 0 0 10px;
+			margin: 0 0 20px 0;
+			cursor: pointer;
+		}
+
+	</style>
+
+
+	<div id="filter">
+
+		<template is="dom-repeat" items="[[entry]]" as="ent">
+			<filter-item class="menuItems" entry="[[ent.title]]"></filter-item>
+		</template>
+
+	</div>
+
+
+	</template>
+
+	<script>
+
+	class FilterMenu extends Polymer.Element {
+	  static get is() { return 'filter-menu'; }
+
+	  static get properties(){
+		return {
+			entry:Object
+		}
+	  }
+
+	  ready(){
+	      super.ready();
+	      console.log(this.entry);
+	  }
+
+	}
+
+	window.customElements.define(FilterMenu.is, FilterMenu);
+	</script>
+
+</dom-module>

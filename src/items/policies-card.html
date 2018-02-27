@@ -1,0 +1,179 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<!-- Items -->
+<link rel="import" href="policy-item.html">
+
+<dom-module id="policies-card">
+  <template>
+    <style>
+      
+
+	 #container {
+		 display: flex;
+		 flex-direction: column;
+		 width: 100%;
+	 }
+
+
+	  #policies {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			width: 100%;
+		    max-height: 435px;
+			padding: 0 0 0 10px;
+			margin: 0 50px 0 0;
+		    font-family: "Roboto";
+		    font-weight: 400;
+			border-radius: 5px;
+			box-sizing: border-box;
+			background-color: #fff;
+			box-shadow: 0px 2px 2px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6), -1px 1px 1px rgba(180,180,180, 0.6);
+		}
+
+	  	/* List of policies*/
+
+		#policies > #policiesContainer {
+			width: 30%;
+			min-width: 150px;
+			overflow: auto;
+			margin: 0;
+			padding: 30px 5px 5px 5px;
+			border-right: 1px solid rgba(170,170,170,0.4);
+		}
+
+	  #policies > #policiesContainer p {
+		  font-size: 14px;
+		  color: #212121;
+		  text-align: left;
+		  margin: 0 0 10px 0;
+		  padding: 0 5px;
+		  border-left: 2px solid #90CAF9;
+		  cursor: pointer;
+	  }
+
+	  /* Preview of the policy */
+
+	  #policies > #policiesViewer {
+		  display: flex;
+		  flex-direction: column;
+		  min-width:250px;
+		  margin: 0;
+		  padding: 10px;
+	  }
+
+	  /* Text style */
+
+	  #text {
+		  font-family: "Roboto";
+		  font-weight: 400;
+		  font-size: 14px;
+		  font-color: #212121;
+		  height: 400px;
+		  overflow: auto;
+	  }
+
+	  /* Icons */
+
+	  .icons {
+		  --iron-icon-width: 22px;
+		  --iron-icon-height: 22px;
+		  color: #666;
+		  align-self: flex-end;
+		  cursor: pointer;
+	  }
+
+	  #policiesViewer > .icons {
+		  display: block;
+	  }
+
+	  /* Paper fab button */
+
+	  #container > paper-fab {
+		  --paper-fab-background: #1E88E5;
+		  align-self: flex-end;
+		  position: fixed;
+		  right: 30px;
+		  bottom: 50px;
+	  }
+		
+
+	  
+    </style>
+
+
+	 <div id="container">
+		<div id="policies">
+			<div id="policiesContainer">
+				<template is="dom-repeat" items="[[entry]]" as="ent">
+					<policy-item name="[[ent.name]]"></policy-item>
+				</template>
+			</div>
+
+
+			<div id="policiesViewer">
+				<iron-icon class="icons" icon="open-in-new" on-click="_openInNewWindow"></iron-icon>
+				<p id="text">
+					Lorem ipsum dolor sit amet, detracto forensibus vel ex, magna elaboraret ut eum. Conceptam consequuntur nam et, sed augue exerci mucius in, natum nominavi fabellas te vix. Mei posidonium delicatissimi at, autem meliore detraxit at vis. Graece delectus ad per.
+
+					Ad aeterno habemus sensibus vis, eam id clita reprehendunt, id sed quis quando tincidunt. Ex tollit apeirian probatus vel, populo blandit hendrerit quo ne, cu purto ullum dicant vim. Ne sint dissentias mel, amet option quo no. Unum menandri sit id, te vidisse explicari vituperata eum. No usu oblique virtute mnesarchum, audiam quaeque per ad, dicta eloquentiam eam ea. Ex sea alia bonorum, cum mutat aliquando te.
+
+					Ex accusam patrioque vix. Id cum tempor option appareat, his ancillae postulant dissentiet at. Dicat graeci eu vim, labitur atomorum ocurreret ei ius. Vis omittam postulant cu.
+
+					Impedit vivendo eu duo, cum eros ferri ne, cum iuvaret patrioque an. Diam alterum sadipscing duo ea. Has impedit evertitur dissentias an. Tantas quidam iudicabit eum eu. Ancillae aliquando no vis.
+
+					Lorem ipsum dolor sit amet, detracto forensibus vel ex, magna elaboraret ut eum. Conceptam consequuntur nam et, sed augue exerci mucius in, natum nominavi fabellas te vix. Mei posidonium delicatissimi at, autem meliore detraxit at vis. Graece delectus ad per.
+
+					Ad aeterno habemus sensibus vis, eam id clita reprehendunt, id sed quis quando tincidunt. Ex tollit apeirian probatus vel, populo blandit hendrerit quo ne, cu purto ullum dicant vim. Ne sint dissentias mel, amet option quo no. Unum menandri sit id, te vidisse explicari vituperata eum. No usu oblique virtute mnesarchum, audiam quaeque per ad, dicta eloquentiam eam ea. Ex sea alia bonorum, cum mutat aliquando te.
+
+					Ex accusam patrioque vix. Id cum tempor option appareat, his ancillae postulant dissentiet at. Dicat graeci eu vim, labitur atomorum ocurreret ei ius. Vis omittam postulant cu.
+
+					Impedit vivendo eu duo, cum eros ferri ne, cum iuvaret patrioque an. Diam alterum sadipscing duo ea. Has impedit evertitur dissentias an. Tantas quidam iudicabit eum eu. Ancillae aliquando no vis.
+				</p>
+				<div class="icons">
+					<iron-icon class="icons" icon="create" on-click="goToEditPage" ></iron-icon>
+					<iron-icon class="icons" icon="delete" on-click="_deletePolicy"></iron-icon>
+				</div>
+			</div>
+		</div>
+		 <paper-fab icon="add-box" on-click="_createPolicy"></paper-fab>
+	 </div>
+	
+	
+	</template>
+  <script>
+    
+    class PoliciesCard extends Polymer.Element {
+      static get is() { return 'policies-card'; }
+	  
+	  static get properties(){
+		return {
+			entry: Object
+		}
+	  }
+
+	  goToEditPage(){
+          location.href="/addpolicy";
+	  }
+
+	  _createPolicy(){
+          console.log("New policy created.");
+	  }
+
+	  _deletePolicy(){
+            console.log("Policy deleted.");
+	  }
+
+	  _openInNewWindow(){
+          console.log("Open in new window.");
+	  }
+      
+    }
+
+    window.customElements.define(PoliciesCard.is, PoliciesCard);
+  </script>
+</dom-module>

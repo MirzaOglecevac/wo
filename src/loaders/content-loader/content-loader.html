@@ -1,0 +1,169 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="content-loader">
+  <template>
+    <style>
+
+      .animate {
+        -webkit-animation: gradient-slide 2.2s ease infinite;
+        animation: gradient-slide 2.2s ease infinite;
+        background: 0 0/300% 300% linear-gradient(-61deg, var(--loader-background, #eeeeee) 40%, var(--loader-color, #f5f5f5) 50%, var(--loader-background, #eeeeee) 60%);
+      }
+      @keyframes gradient-slide{
+        0% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      #content {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+          min-width: 350px;
+          padding: 0 0 10px 0;
+          margin: 0 auto;
+          border-radius: 5px;
+          box-sizing: border-box;
+          background-color: #fff;
+          margin-bottom: 15px;
+          box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+      }
+
+
+
+      #content > div,  #content > p{
+          width: 100%;
+          padding:  10px 5px;
+          margin: 0;
+          box-sizing: border-box;
+          min-height: 50px;
+      }
+
+      #content > .userPart {
+          display: flex;
+          flex-direction: row;
+      }
+
+      #content > .userPart > p {
+          display: inline-block;
+          width: 65px;
+          height: 65px;
+          margin: 0 10px;
+          border-radius: 50%;
+      }
+
+      .userPart  p {
+          color: #BDBDBD;
+          font-family: "Roboto";
+          font-weight: 400;
+          padding: 0;
+          margin: 0;
+      }
+
+      .userPart  p:first-child {
+          color: #212121;
+          font-family: "Roboto";
+          font-weight: 500;
+          padding: 0;
+          margin: 0;
+      }
+
+      /* Text part */
+
+      .textPart, .iconsPart {
+          padding: 5px 15px !important;
+          font-weight: 400;
+          width: 97% !important;
+          margin: 0 auto !important;
+          color: #212121;
+      }
+
+      .userInfo > p {
+          width: 80px;
+          height: 10px;
+          border-radius: 5px;
+          margin-top: 5px;
+          position: relative;
+          top: 5px;
+      }
+
+      /* Icons part */
+
+      .iconsPart {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: space-between;
+          align-items: flex-end;
+          padding-bottom: 0px !important;
+      }
+
+
+      .iconsPart span {
+          display: inline-block;
+          margin-right: 15px;
+          width: 24px;
+          height: 24px;
+          border-radius: 5px;
+      }
+
+    </style>
+
+      <div id="content">
+
+          <div class="userPart">
+              <p class="animate"></p>
+              <div class="userInfo">
+                  <p id="letterTypeOne" class="animate"></p>
+                  <p id="dateType" class="animate"></p>
+              </div>
+          </div>
+
+          <p class="textPart animate"></p>
+
+          <div class="iconsPart" id="iconsPart">
+              <div class="leftIcons">
+                  <span class="animate"></span>
+                  <span class="animate" ></span>
+                  <span class="animate"></span>
+              </div>
+
+              <div class="rightIcons">
+                  <span class="animate"></span>
+              </div>
+          </div>
+
+      </div>
+
+  </template>
+  <script>
+    class ContentLoader extends Polymer.Element {
+      static get is() { return 'content-loader'; }
+      static get properties() {
+        return {
+          // Optional header text
+          headline: {
+            type: String,
+            value: ""
+          },
+          // Optional body text
+          text: {
+            type: String,
+            value: ""
+          },
+          // Optional href
+          href: {
+            type: String
+          },
+          // When loading is true, a skeleton loader is shown
+          loading: {
+            type: Boolean,
+            value: true
+          }
+        };
+      }
+    }
+
+    window.customElements.define(ContentLoader.is, ContentLoader);
+  </script>
+</dom-module>

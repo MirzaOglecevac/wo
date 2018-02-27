@@ -1,0 +1,174 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+<dom-module id="permissions-card">
+  <template>
+    <style>
+      
+	  
+	  #permissions {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			min-width: 350px;
+			padding: 10px;
+			margin: 0 auto;
+		    font-family: "Roboto";
+		    font-weight: 400;
+			border-radius: 5px;
+			box-sizing: border-box;
+			background-color: #fff;
+			box-shadow: 0px 2px 2px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6), -1px 1px 1px rgba(180,180,180, 0.6);
+		}
+
+	  	#heading {
+			font-size: 20px;
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+
+	  	#heading, #filter {
+			align-self: flex-start;
+			width: 100%;
+		}
+
+		#filter {
+			font-size: 14px;
+		}
+
+		#filter > #user {
+			color: #0091EA;
+			cursor: pointer;
+		}
+
+	  #filter > #scope {
+		  color: #0091EA;
+		  opacity: 0.34;
+		  cursor: pointer;
+	  }
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		table th {
+			color: #bdbdbd;
+			font-weight: 300;
+			text-align: center;
+			padding: 5px;
+			border-right: 1px solid rgba(170,170,170,0.5);
+		}
+
+		 table th:last-child {
+			border-right: none;
+		 }
+
+		table td {
+			color: #323232;
+			text-align: center;
+			font-weight: 300;
+			padding: 5px;
+			border-right: 1px solid rgba(170,170,170,0.5);
+			border-top: 1px solid rgba(170,170,170,0.5);
+		}
+
+		table td:last-child {
+			border-right: none;
+
+		}
+
+		iron-icon {
+			cursor: pointer;
+			color: #666;
+			--iron-icon-width: 22px;
+			--iron-icon-height: 22px;
+			margin-right: 5px;
+		}
+
+	  
+    </style>
+   
+
+	  <div id="permissions">
+		  <p id="heading">Admins & Permissions</p>
+		  <p id="filter">Filter By <span id="user" on-click="_filterBy">User</span> <span id="scope" on-click="_filterBy">Scope</span></p>
+		  <table>
+			  <tr>
+				  <th>Email</th>
+				  <th>Scope</th>
+				  <th>Name</th>
+				  <th>Last active</th>
+				  <th>Created</th>
+				  <th></th>
+			  </tr>
+
+			  <template is="dom-repeat" items="[[entry]]" as="ent">
+				  <tr>
+					  <td>{{ent.email}}</td>
+					  <td>{{ent.scope}}</td>
+					  <td>{{ent.name}}</td>
+					  <td>{{ent.last_active}}</td>
+					  <td>{{ent.created}}</td>
+					  <td>
+						  <iron-icon icon="create" on-click="_editUser"></iron-icon>
+						  <iron-icon icon="delete" on-click="_deleteUser"></iron-icon>
+					  </td>
+				  </tr>
+			  </template>
+
+		  </table>
+	  </div>
+
+	
+	
+	</template>
+  <script>
+    
+    class PermissionsCard extends Polymer.Element {
+      static get is() { return 'permissions-card'; }
+	  
+	  static get properties(){
+		return {
+			entry: Object
+		}
+	  }
+
+        _filterBy(event){
+            var filter = event.target.id;
+
+            switch(filter){
+				case "scope":
+				    this.$.user.style="opacity: 0.54;";
+                    this.$.scope.style="opacity: 1;";
+                    //filter list
+                    break;
+                case "user":
+                    this.$.user.style="opacity: 1;";
+                    this.$.scope.style="opacity: 0.54;";
+                   // filter list
+                    break;
+			}
+
+        }
+
+        _editUser(){
+          console.log("User edited.");
+		}
+
+        _deleteUser(){
+            console.log("User deleted.");
+            this.dispatchEvent(new CustomEvent('delete-user-admin', {
+                bubbles: true, composed: true, detail: {
+                    areYouSure: "yes",
+                    text: "Are you sure you want to delete this admin user?"
+                }}));
+        }
+      
+    }
+
+    window.customElements.define(PermissionsCard.is, PermissionsCard);
+  </script>
+</dom-module>

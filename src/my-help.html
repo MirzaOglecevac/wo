@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Items -->
+<link rel="import" href="items/help-card.html">
+
+<dom-module id="my-help">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            paper-fab {
+                --paper-fab-background: #1976D2;
+                position: fixed;
+                bottom: 50px;
+                right: 40px;
+            }
+        </style>
+
+        <div class="emptyCard">
+            <help-card></help-card>
+        </div>
+
+        <paper-fab icon="mail" on-click="_sendMail"></paper-fab>
+    </template>
+
+    <script>
+        class MyHelp extends Polymer.Element {
+            static get is() { return 'my-help'; }
+
+            _sendMail(){
+                console.log("Send mail.");
+            }
+        }
+
+        window.customElements.define(MyHelp.is, MyHelp);
+    </script>
+</dom-module>

@@ -1,0 +1,109 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Items -->
+<link rel="import" href="items/notification-card.html">
+<link rel="import" href="loaders/notifications-loader/notifications-loader.html">
+
+<dom-module id="my-notifications">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            /* Style loader */
+
+            notifications-loader {
+                --loader-background: #E0E0E0;
+                --loader-color: #bbb;
+            }
+
+        </style>
+
+        <iron-request id="ironAjax"></iron-request>
+
+        <div class="emptyCard">
+
+            <div id="loadingScreen">
+                <template is="dom-repeat" items="[[counter]]">
+                    <notifications-loader></notifications-loader>
+                </template>
+            </div>
+
+            <div id="mainScreen">
+                <template is="dom-repeat" items="[[notifications]]" as="notification">
+                    <notification-card entry="[[notification]]"></notification-card>
+                </template>
+            </div>
+
+        </div>
+    </template>
+
+    <script>
+        class MyNotifications extends Polymer.Element {
+            static get is() { return 'my-notifications'; }
+
+            static get properties(){
+                return {
+                    notificationItems: {
+                        type:Array,
+                        observer: '_onNotificationModelChange'
+                    },
+                    counter: {
+                      type: Array,
+                      value: [1,2,3,4]
+                    },
+                    notifications:{
+                        type:Array,
+                        value : function(){return [
+                            {
+                                "userImage":"http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                                "userName":"Some name",
+                                "date":"2018-20-20",
+                                "media":null,
+                                "body":"Ut pro iusto philosophia, natum minim ut pro, diam utroque vituperatoribus eu nam. Sale viris his ea, mea tollit causae legimus ex, sit no vide principes. Ad ius lorem nostrum rationibus, cu vix populo electram contentiones. In scaevola phaedrum consequat duo. ",
+                                "likes":121,
+                                "comments":12,
+                                "shares":12,
+                                "type":"FB"
+                            },
+                            {
+                                "userImage":"http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                                "userName":"Some name",
+                                "date":"2018-20-20",
+                                "media":"http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                                "body":"Cum praesent erroribus no, et minimum erroribus prodesset mea. In per quot tritani. Te verear consulatu definitionem duo.",
+                                "likes":121,
+                                "comments":12,
+                                "shares":12,
+                                "type":"YT"
+                            },
+                            {
+                                "userImage":"http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                                "userName":"Some name",
+                                "date":"2018-20-20",
+                                "media":"http://static3.uk.businessinsider.com/image/589a1765dd0895cb6e8b49f8-1200/.jpg",
+                                "body":"Some body",
+                                "likes":121,
+                                "comments":12,
+                                "shares":12,
+                                "type":"INSTA"
+                            }
+                        ];},
+                    }
+                }
+            }
+
+            ready() {
+                super.ready();
+                this.$.loadingScreen.style = "display: block;";
+                this.$.mainScreen.style = "display: none;";
+                //this.bind(this.$.statisticsMenu, this.$.ironAjax);
+            }
+        }
+
+        window.customElements.define(MyNotifications.is, MyNotifications);
+    </script>
+</dom-module>

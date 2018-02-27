@@ -1,0 +1,139 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+<dom-module id="notification-card">
+  <template>
+    <style>
+
+		#content {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			width: 100%;
+			min-width: 350px;
+			padding: 5px 5px 0 5px;
+			margin: 0 auto;
+			border-radius: 5px;
+			box-sizing: border-box;
+			background-color: #fff;
+			margin-bottom: 15px;
+			box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+		}
+
+
+
+		#content > div,  #content > p{
+			width: 100%;
+			padding:  10px 5px;
+			margin: 0;
+			box-sizing: border-box;
+			min-height: 50px;
+		}
+
+		#content > .userPart {
+			display: flex;
+			flex-direction: row;
+		}
+
+		#content > .userPart > iron-image {
+			display: inline-block;
+			--iron-image-width: 43px;
+			--iron-image-height: 43px;
+			margin: 0 10px;
+			border-radius: 50%;
+		}
+
+		.userPart  p {
+			color: #BDBDBD;
+			font-family: "Roboto";
+			font-size: 14px;
+			font-weight: 400;
+			padding: 0;
+			margin: 0;
+		}
+
+		.userPart  p:first-child {
+		  color: #212121;
+		  font-family: "Roboto";
+		  font-weight: 500;
+		  padding: 0;
+		  margin: 0;
+		}
+
+		/* Text part */
+
+		.textPart, .iconsPart {
+			paddint-left: 10px;
+			padding: 5px 0;
+			font-family: "Roboto";
+			font-weight: 400;
+			color: #212121;
+		}
+
+		/* Ok button */
+
+		#content > span{
+			display: inline-block;
+			margin-bottom: 10px;
+			width: 30px;
+			height: 20px;
+			font-weight: bold;
+			align-self: flex-end;
+			cursor: pointer;
+		}
+
+		#content > span:hover{
+			color: #42A5F5;
+		}
+
+
+
+    </style>
+   
+	
+	<div id="content">
+
+		<div class="userPart">
+			<iron-image src$={{entry.userImage}} alt="Not Found"></iron-image>
+			<div class="userInfo">
+				<p id="letterTypeOne">{{entry.userName}}</p>
+				<p id="dateType">{{entry.date}}</p>
+			</div>
+		</div>
+
+		<p class="textPart" id="textPart">
+			{{entry.body}}
+		</p>
+
+		<span on-click="_deleteNotification">Ok</span>
+
+	</div>
+	
+	
+	
+	</template>
+  <script>
+    
+    class NotificationCard extends Polymer.Element {
+      static get is() { return 'notification-card'; }
+
+		static get properties(){
+			return {
+				entry:Object
+			}
+		}
+
+        _deleteNotification(){
+          console.log("Notification deleted.");
+          this.dispatchEvent(new CustomEvent('notification-seen', {bubbles: true, composed: true, detail: {
+              	 areYouSure: "Yes",
+             	 text: "Are you sure you want to mark this notification as read?"
+          }}));
+		}
+
+    }
+
+    window.customElements.define(NotificationCard.is, NotificationCard);
+  </script>
+</dom-module>

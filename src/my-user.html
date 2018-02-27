@@ -1,0 +1,202 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-search/paper-search-bar.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../bower_components/emo-ji/test.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Scripts -->
+<script src="background/viewModels/userVM.js"></script>
+<script src="background/models/userModel.js"></script>
+<script src="background/core/configuration.js"></script>
+
+<!-- Items -->
+<link rel="import" href="items/user-card.html">
+<link rel="import" href="items/filter-menu.html">
+<link rel="import" href="loaders/users-loader/users-loader.html">
+
+<dom-module id="my-user">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .emptyCard {
+                margin: 0 164px 0 0;
+                padding: 5px 0 5px 15px;
+                height: 620px;
+            }
+
+            paper-search-bar {
+                min-width: 350px;
+                box-shadow: 0px 2px 2px rgba(180,180,180, 0.6), 0px -1px 1px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6), -1px 1px 1px rgba(180,180,180, 0.6);
+                margin-top: 0px;
+                margin-right: 10px;
+            }
+
+            /* Loader style */
+
+            .loader {
+                text-align: center;
+                height: 20px;
+                font-size: 14px;
+                line-height: 20px;
+                color: #757575;
+                padding: 0;
+                margin: 0;
+            }
+
+            users-loader {
+                --loader-background: #e0e0e0;
+                --loader-color: #bbb;
+            }
+
+            .fade {
+                opacity: 1;
+                animation-name: fadeInOpacity;
+                animation-iteration-count: 1;
+                animation-timing-function: ease-in;
+                animation-duration: 1s;
+            }
+
+            @keyframes fadeInOpacity {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+
+            #mainScreen {
+                height: 520px;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+        </style>
+
+        <!-- HTTP Request -->
+        <iron-ajax
+                auto
+                id="ironAjax"></iron-ajax>
+
+        <div class="emptyCard">
+
+            <div id="skeletonScreen">
+               <template is="dom-repeat" items="[[counter]]">
+                 <users-loader ></users-loader>
+               </template>
+            </div>
+
+            <paper-search-bar id="searcher" hide-filter-button="true"></paper-search-bar>
+            <br/>
+
+            <div class="fade" id="mainScreen">
+                <template id="userList" is="dom-repeat" items="[[userItems]]" as="userItem">
+                    <user-card entry="[[userItem]]"></user-card>
+                </template>
+            </div>
+
+            <div class="loader" id="loader">Fetching new items...<emo-ji type="tada"></emo-ji></div>
+
+            <div class="rightMenu">
+                <filter-menu entry="[[filterMenuItems]]"></filter-menu>
+            </div>
+
+        </div>
+
+        <!-- Trigger for threshhold -->
+        <iron-scroll-threshold id="scrollThreshold"
+               scroll-target="mainScreen"
+               lower-threshold="500"
+               lower-triggered="{{lowerTriggered}}"
+               on-lower-threshold="loadMoreData">
+        </iron-scroll-threshold>
+
+    </template>
+
+    <script>
+        class MyUser extends UserVM(Polymer.Element, UserModel, Configuration) {
+            static get is() { return 'my-user'; }
+
+            static get properties() {
+                return {
+                    userItems: {
+                        type: Array,
+                        observer: '_onUserModelChange'
+                    },
+                    // Load more counter
+                    counter: {
+                        type: Array,
+                        value: [1,2,3,4,5]
+                    },
+                    // Filter Menu
+                    filterMenuItems:{
+                        type:Array,
+                        value : function(){return [
+                            {"title":"All"},
+                            {"title":"Most popular"},
+                            {"title":"Wobbl popular"},
+                            {"title":"Newest"},
+                            {"title":"Reported"}
+                        ];}
+                    },
+                    // Request helpers
+                    limit:{
+                        type: Number,
+                        value: 20
+                    },
+                    from:{
+                        type:Number,
+                        value:0
+                    },
+                    isFirstUser:{
+                        type:Boolean,
+                        value:true
+                    },
+                    settingsMenuItems:{
+                        type:Array,
+                        value: function(){
+                            return [
+                                {"title":"Main Menu","image":"icons:arrow-back","href":"statistics","menu":true},
+                                {"title":"Monolog","image":"icons:bug-report","href":"monolog","menu":true},
+                                {"title":"Users","image":"icons:supervisor-account","href":"users","menu":true},
+                                {"title":"Policy","image":"icons:chrome-reader-mode","href":"policy","menu":true},
+                                {"title":"Help","image":"icons:help-outline","href":"help","menu":true},
+                            ];
+                        }
+                    },
+                }
+            }
+
+            ready(){
+                super.ready();
+                this.$.skeletonScreen.style = "display: block;";
+                this.$.mainScreen.style = "display: none;";
+                this.$.searcher.style="display: none;";
+                this.$.loader.style = "display: block;";
+
+                this.userItems = [];
+
+                //this.bind(this.$.userList, this.$.ironAjax, this.limit, this.from);
+            }
+
+            // Load more content
+            loadMoreData() {
+                console.log('load more');
+                this.$.loader.style = "display: block;";
+                // Simulate network delay
+                this.bind(this.$.ironAjax, this.limit, this.from);
+                this.$.scrollThreshold.clearTriggers();
+            }
+
+        }
+        window.customElements.define(MyUser.is, MyUser);
+    </script>
+</dom-module>

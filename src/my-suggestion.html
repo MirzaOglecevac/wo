@@ -1,0 +1,322 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="shared-styles.html">
+
+
+<!-- Scripts -->
+<script src="background/viewModels/suggestedVM.js"></script>
+<script src="background/models/suggestedModel.js"></script>
+<script src="background/core/configuration.js"></script>
+
+<!-- Items -->
+<link rel="import" href="items/profile-item.html">
+<link rel="import" href="loaders/suggestions-loader/suggestions-loader.html">
+
+<dom-module id="my-suggestion">
+    <template>
+        <style include="shared-styles">
+
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            #containerSuggestions, #containerExamples {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                min-width: 350px;
+                padding: 10px 10px 0 10px;
+                margin: 0 auto;
+                border-radius: 5px;
+                box-sizing: border-box;
+                background-color: #fff;
+                box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+            }
+
+            #suggestions {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+            }
+
+            #suggestions > profile-item {
+                cursor: pointer;
+            }
+
+            #examples {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+
+            #container > p {
+                color: #212121;
+                font-family: "Roboto";
+                font-weight: 500;
+                text-align: left;
+            }
+
+            /* Additional loader style */
+
+            suggestions-loader {
+                --loader-background: #e0e0e0;
+                --loader-color: #bbb;
+            }
+
+
+        </style>
+
+        <iron-request id="ironAjax"></iron-request>
+
+        <div class="emptyCard">
+
+            <!-- Loading screen -->
+            <div id="loadingScreen">
+                <div id="containerSuggestions">
+                    <div id="suggestions">
+                        <template is="dom-repeat" items="[[counter.0]]">
+                            <suggestions-loader></suggestions-loader>
+                        </template>
+                    </div>
+                </div>
+                <br/>
+                <div id="containerExamples">
+                    <div id="examples">
+                        <template is="dom-repeat" items="[[counter.1]]">
+                            <suggestions-loader></suggestions-loader>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main screen -->
+            <div id="mainScreen">
+                <div id="containerSuggestions">
+                    <p>Suggestions</p>
+                    <div id="suggestions">
+                        <template is="dom-repeat" items="[[users]]" as="user">
+                            <profile-item entry="[[user]]" on-click="_changePerson"></profile-item>
+                        </template>
+                    </div>
+                </div>
+                <br/>
+                <div id="containerExamples">
+                    <p>Example preview</p>
+                    <div id="examples">
+                        <template  is="dom-repeat" items="[[examples]]" as="example">
+                            <profile-item entry="[[example]]"></profile-item>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </template>
+
+    <script>
+        class MySuggestion extends SuggestedVM(Polymer.Element, SuggestedModel, Configuration) {
+            static get is() { return 'my-suggestion'; }
+
+            static get properties(){
+                return {
+                    suggestionItems: {
+                        type: Array,
+                        observer: '_onSuggestionsModelChange'
+                    },
+                    users:{
+                        type:Array,
+                        value : function(){return [
+                            {
+                                "user_id": 1,
+                                "image": "https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 2,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 3,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":false,
+                                "searchCard":false
+                            }
+                        ];},
+
+                    },
+                    counter: {
+                        type: Array,
+                        value: [[1,2,3], [1,2,3,4,5,6,7,8,9]]
+                    },
+                    examples:{
+                        type:Array,
+                        value : function(){return [
+                            {
+                                "user_id": 1,
+                                "image": "https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 2,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 3,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":false,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 1,
+                                "image": "https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 2,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 3,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":false,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 1,
+                                "image": "https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 2,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":true,
+                                "searchCard":false
+                            },
+                            {
+                                "user_id": 3,
+                                "image":"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                                "name":"Mirza Oglecevac",
+                                "followers":500000,
+                                "date":"2018-12-12",
+                                "type":"Influencer",
+                                "reported":false,
+                                "searchCard":false
+                            }
+                        ];},
+
+                    },
+                }
+            }
+
+            ready(){
+                super.ready();
+                this.$.loadingScreen.style = "display: none;";
+                //this.$.mainScreen.style = "display: none;";
+                //this.bind(this.$.suggestionList, this.$.ironAjax);
+            }
+
+            _changePerson(){
+                console.log("Changing person...");
+                this.dispatchEvent(new CustomEvent('change-person', {
+                    bubbles: true, composed: true, detail: {
+                        changePerson: "yes",
+                        data: [
+                            {
+                            image:"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                            full_name: "Mirzoni",
+                            searchCard: "Yes",
+                            verified: "Yes"
+                            },
+                            {
+                            image:"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                            full_name: "Mirzoni",
+                            searchCard: "Yes"
+                            },
+                            {
+                            image:"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                            full_name: "Mirzoni",
+                            searchCard: "Yes",
+                            verified: "Yes"
+                            },
+                            {
+                            image:"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                            full_name: "Mirzoni",
+                            searchCard: "Yes"
+                            },
+                            {
+                            image:"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                            full_name: "Mirzoni",
+                            searchCard: "Yes",
+                            verified: "Yes"
+                            },
+                            {
+                            image:"https://static.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+                            full_name: "Mirzoni",
+                            searchCard: "Yes"
+                            }
+                        ]
+                    }}));
+            }
+        }
+
+        window.customElements.define(MySuggestion.is, MySuggestion);
+    </script>
+</dom-module>

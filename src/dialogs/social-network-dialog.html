@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-search/paper-search-bar.html">
+<link rel="import" href="../items/user-card.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="social-network-dialog">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+			
+			#container {
+				width: 100%;
+			}
+			
+            .button-holder{
+                float: right;
+                padding-bottom: 10px;
+            }
+
+            paper-button.yes {
+                background-color: var(--paper-deep-orange-a700);
+                color: white;
+            }
+
+        </style>
+
+		<div id="container">
+			<!-- <user-card entry="[[userData]]"></user-card> -->
+			<paper-search-bar hide-filter-button="true"></paper-search-bar>
+			<div class="button-holder">
+				<paper-button on-click="_cancel">Cancel</paper-button>
+				<paper-button class="yes" on-click="_done">Done</paper-button>
+			</div>
+		</div>
+		
+
+
+    </template>
+
+    <script>
+        class SocialNetworkDialog extends Polymer.Element {
+            static get is() { return 'social-network-dialog'; }
+
+            static get properties(){
+                return {
+                    entry:Object
+                }
+            }
+
+            _cancel() {
+                console.log('Cancel');
+				
+            }
+
+            _done() {
+                console.log('Done');
+            }
+        }
+
+        window.customElements.define(SocialNetworkDialog.is, SocialNetworkDialog);
+    </script>
+</dom-module>

@@ -1,0 +1,32 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Items -->
+<link rel="import" href="items/policy-editor.html">
+
+<dom-module id="my-addpolicy">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+
+        </style>
+
+        <div class="emptyCard">
+            <policy-editor></policy-editor>
+        </div>
+
+
+    </template>
+
+    <script>
+        class MyAddPolicy extends Polymer.Element {
+            static get is() { return 'my-addpolicy'; }
+        }
+
+        window.customElements.define(MyAddPolicy.is, MyAddPolicy);
+    </script>
+</dom-module>

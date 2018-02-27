@@ -1,0 +1,175 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/emo-ji/test.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Scripts -->
+<script src="background/viewModels/contentVM.js"></script>
+<script src="background/models/contentModel.js"></script>
+<script src="background/core/configuration.js"></script>
+
+<!-- Imports -->
+<link rel="import" href="items/content-card.html">
+<link rel="import" href="items/filter-menu.html">
+<link rel="import" href="loaders/content-loader/content-loader.html">
+
+<dom-module id="my-content">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+
+            .emptyCard {
+                padding: 0 !important;
+                margin: 0 164px 0 0;
+                height: 620px;
+            }
+
+            .loader {
+                text-align: center;
+                height: 20px;
+                padding: 0;
+                margin: 0;
+                font-size: 14px;
+                line-height: 20px;
+                color: #757575;
+            }
+
+            #mainScreen {
+                height: 590px;
+                padding: 0 10px 0 10px;
+                width: 100%;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Loader style */
+
+            content-loader {
+                --loader-background: #e0e0e0;
+                --loader-color: #bbb;
+            }
+
+            .fade {
+                opacity: 1;
+                animation-name: fadeInOpacity;
+                animation-iteration-count: 1;
+                animation-timing-function: ease-in;
+                animation-duration: 1s;
+            }
+
+            @keyframes fadeInOpacity {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+
+        </style>
+
+        <!-- HTTP Request -->
+        <iron-ajax
+                auto
+                id="ironAjax"></iron-ajax>
+
+        <div class="emptyCard">
+
+            <!-- TODO -->
+            <div id="skeletonScreen">
+                <template is="dom-repeat" items="[[counter]]">
+                    <content-loader></content-loader>
+                </template>
+            </div>
+
+            <div class="fade" id="mainScreen">
+                <template id="contentList" is="dom-repeat" items="[[contentItems]]" as="contentItem">
+                    <content-card entry="[[contentItem]]"></content-card>
+                </template>
+            </div>
+
+
+            <div class="loader" id="loader">Fetching new items...<emo-ji type="tada"></emo-ji></div>
+
+            <filter-menu entry="[[filterMenuItems]]"></filter-menu>
+        </div>
+
+        <!-- Trigger for threshhold -->
+        <iron-scroll-threshold id="scrollThreshold"
+                               scroll-target="mainScreen"
+                               lower-threshold="500"
+                               lower-triggered="{{lowerTriggered}}"
+                               on-lower-threshold="loadMoreData">
+        </iron-scroll-threshold>
+
+    </template>
+
+    <script>
+        class MyContent extends ContentVM(Polymer.Element, ContentModel, Configuration) {
+            static get is() { return 'my-content'; }
+
+            static get properties() {
+                return {
+                    counter: {
+                        type: Array,
+                        value: [1,2,3,4]
+                    },
+                    contentItems: {
+                        type: Array,
+                        observer: '_onContentModelChange'
+                    },
+                    filterMenuItems: {
+                        type:Array,
+                        value : function(){return [
+                            {"title":"All"},
+                            {"title":"Most popular"},
+                            {"title":"Wobbl popular"},
+                            {"title":"Newest"},
+                            {"title":"Reported"}
+                        ];}
+                    },
+                    // Request helpers
+                    limit:{
+                        type: Number,
+                        value: 15
+                    },
+                    from:{
+                        type:Number,
+                        value:0
+                    },
+                    isFirstContent:{
+                        type:Boolean,
+                        value:true
+                    }
+                }
+            }
+
+            ready() {
+                super.ready();
+                this.$.skeletonScreen.style = "display: block;";
+                this.$.mainScreen.style = "display: none;";
+                this.$.loader.style = "display: block;";
+
+                this.contentItems = [];
+                //this.bind(this.$.userList, this.$.ironAjax, this.limit, this.from);
+            }
+
+            // Load more content
+            loadMoreData() {
+                console.log('load more');
+                this.$.loader.style = "display: block;";
+                // Simulate network delay
+                this.bind(this.$.ironAjax, this.limit, this.from);
+                this.$.scrollThreshold.clearTriggers();
+            }
+
+        }
+
+        window.customElements.define(MyContent.is, MyContent);
+    </script>
+</dom-module>

@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+
+
+<dom-module id="policy-item">
+  <template>
+    <style>
+
+	  p {
+		  font-size: 14px;
+		  color: #212121;
+		  text-align: left;
+		  margin: 0 0 10px 0;
+		  padding: 0 5px;
+		  border-left: 2px solid #90CAF9;
+		  cursor: pointer;
+	  }
+
+
+
+	</style>
+
+
+	  <p>{{name}}</p>
+
+	
+	</template>
+
+	<script>
+
+	class PolicyItem extends Polymer.Element {
+	  static get is() { return 'policy-item'; }
+
+	  static get properties(){
+		return {
+
+		    name: String
+
+		}
+	  }
+
+
+
+	}
+
+	window.customElements.define(PolicyItem.is, PolicyItem);
+	</script>
+
+</dom-module>

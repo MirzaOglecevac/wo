@@ -1,0 +1,83 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Items -->
+<link rel="import" href="items/setup-policy-card.html">
+<link rel="import" href="items/policies-card.html">
+<link rel="import" href="items/policy-editor.html">
+
+
+<dom-module id="my-policy">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+
+            .emptyCard {
+                display: flex;
+                justify-content: center;
+            }
+
+
+        </style>
+
+       <!-- <template is="dom-if" if="true">
+            <div class="emptyCard">
+               <setup-policy-card></setup-policy-card>
+            </div>
+        </template> -->
+
+        <template is="dom-if" if="false">
+            <div class="emptyCard">
+                <policies-card entry="[[policies]]"></policies-card>
+            </div>
+        </template>
+
+
+
+        <!-- <div class="emptyCard">
+            <policy-editor></policy-editor>
+        </div> -->
+
+
+
+
+
+    </template>
+
+    <script>
+        class MyPolicy extends Polymer.Element {
+            static get is() { return 'my-policy'; }
+
+            static get properties(){
+                return {
+                    policies: {
+                        type: Array,
+                        value: function(){
+                            return [
+                                {
+                                  "name": "policyOne",
+                                  "text": "Text for policy one."
+                                },
+                                {
+                                    "name": "policyTwo",
+                                    "text": "Text for policy two."
+                                },
+                                {
+                                    "name": "policyThree",
+                                    "text": "Text for policy three."
+                                }
+                            ]
+
+                        }
+                    }
+                }
+            }
+        }
+
+        window.customElements.define(MyPolicy.is, MyPolicy);
+    </script>
+</dom-module>

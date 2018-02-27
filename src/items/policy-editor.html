@@ -1,0 +1,175 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="policy-editor">
+  <template>
+    <style>
+      
+
+	#bigContainer {
+		display: flex;
+		flex-direction: row;
+	}
+
+	 #container {
+		 display: flex;
+		 flex-direction: column;
+		 justify-content: center;
+		 width: 100%;
+		 margin: 0 auto;
+		 padding: 0 5px 5px 5px;
+		 min-width: 350px;
+		 border-radius: 5px;
+		 box-shadow: 0px 2px 2px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6), -1px 1px 1px rgba(180,180,180, 0.6);
+	 }
+
+	 #container paper-textarea, #container div {
+		 margin: 0;
+	 }
+
+	 #container > div {
+		 padding-bottom: 10px;
+		 border-bottom: 1px solid rgba(170,170,170,0.5);
+	 }
+
+	 #container > paper-textarea{
+		padding: 10px;
+	 }
+
+	 #container > .icons > #right{
+		 position: relative;
+		 top: 7px;
+	 }
+
+	 #container > .icons {
+		 display: flex;
+		 flex-direction: row;
+		 justify-content: space-between;
+		 padding: 5px;
+	 }
+
+     #container > #text {
+
+	 }
+
+
+     /* Icons */
+
+     .icons iron-icon {
+		 color: #666;
+		 --iron-icon-height: 22px;
+		 --iron-icon-width: 22px;
+		 cursor: pointer;
+		 margin-right: 10px;
+	 }
+
+    /* SVGs */
+
+	#left > img {
+		position: relative;
+		top: 7px;
+		cursor: pointer;
+	}
+
+	/* Paper fab */
+
+	paper-fab {
+		--paper-fab-background: #BF360C;
+		align-self: flex-end;
+		position: fixed;
+		right: 40px;
+		bottom: 60px;
+	}
+
+
+    </style>
+
+	<div id="bigContainer">
+		 <div id="container">
+			<div class="icons">
+				<div id="left">
+					<iron-icon icon="arrow-back" on-click="_goToPolicyPage"></iron-icon>
+					<img id="bold" src="../../images/icons/bold.svg" on-click="_boldText"/>
+					<img id="italic" src="../../images/icons/italic.svg" on-click="_italicText"/>
+					<img id="underline" src="../../images/icons/underline.svg" on-click="_underlineText"/>
+					<iron-icon icon="link" on-click="_insertLink"></iron-icon>
+					<iron-icon icon="perm-media" on-click="_insertImage"></iron-icon>
+					<iron-icon icon="list" on-click="_insertList"></iron-icon>
+					<iron-icon icon="line-style" on-click="_insertNewLine"></iron-icon>
+				</div>
+				<iron-icon id="right" icon="open-in-new" on-click="_openInNewWindow"></iron-icon>
+			</div>
+			 <paper-textarea id="text" value="
+			 	Impedit vivendo eu duo, cum eros ferri ne, cum iuvaret patrioque an. Diam alterum sadipscing duo ea. Has impedit evertitur dissentias an. Tantas quidam iudicabit eum eu. Ancillae aliquando no vis.
+
+				 Lorem ipsum dolor sit amet, detracto forensibus vel ex, magna elaboraret ut eum. Conceptam consequuntur nam et, sed augue exerci mucius in, natum nominavi fabellas te vix. Mei posidonium delicatissimi at, autem meliore detraxit at vis. Graece delectus ad per.
+
+				 Ad aeterno habemus sensibus vis, eam id clita reprehendunt, id sed quis quando tincidunt. Lorem ipsum dolor sit amet, detracto forensibus vel ex, magna elaboraret ut eum.Lorem ipsum dolor sit amet, detracto forensibus vel ex, magna elaboraret ut eum.
+			 "></paper-textarea>
+		 </div>
+		<paper-fab icon="save" on-click="_savePolicy"></paper-fab>
+	</div>
+	
+	
+	</template>
+  <script>
+    
+    class PolicyEditor extends Polymer.Element {
+
+      static get is() { return 'policy-editor'; }
+	  
+	  static get properties(){
+		return {
+
+		}
+	  }
+
+	  _savePolicy(){
+          console.log("Policy saved.");
+	  }
+
+	  _goToPolicyPage(){
+          console.log("Going to policy page.");
+	  }
+
+	  _boldText(){
+          console.log("Text bold.");
+	  }
+
+	  _italicText(){
+          console.log("Text italic.");
+	  }
+
+	  _underlineText(){
+		  console.log("Text underline.");
+	  }
+
+	  _insertLink(){
+          console.log("Link inserted.");
+	  }
+
+	  _insertImage(){
+		  console.log("Image inserted.");
+	  }
+
+	  _insertList(){
+		  console.log("List inserted.");
+	  }
+
+	  _insertNewLine(){
+		  console.log("New line inserted.");
+	  }
+
+	  _openInNewWindow(){
+          console.log("Opened in new window.");
+	  }
+      
+    }
+
+    window.customElements.define(PolicyEditor.is, PolicyEditor);
+  </script>
+</dom-module>

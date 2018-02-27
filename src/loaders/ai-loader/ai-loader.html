@@ -1,0 +1,182 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!--
+`list-item`
+
+ES6 Polymer 2 list item with a skeleton loader
+
+### Styling
+`<list-item>` provides the following custom properties and mixins
+for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--text-color` | Headline text color | #212121
+`--secondary-text-color` | Body text color | #737373
+`--loader-background` | Bg color of skeleton text | #eeeeee
+`--loader-color` | Bg color of moving loader | #f5f5f5
+
+@customElement
+@demo demo/index.html
+@polymer
+-->
+
+<dom-module id="ai-loader">
+  <template>
+    <style>
+
+
+
+
+      .animate {
+        -webkit-animation: gradient-slide 2.2s ease infinite;
+        animation: gradient-slide 2.2s ease infinite;
+        background: 0 0/300% 300% linear-gradient(-61deg, var(--loader-background, #eeeeee) 40%, var(--loader-color, #f5f5f5) 50%, var(--loader-background, #eeeeee) 60%);
+      }
+      @keyframes gradient-slide{
+        0% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      #merge {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          width: 100%;
+          min-width: 350px;
+          padding: 10px;
+          margin: 0 auto;
+          border-radius: 5px;
+          box-sizing: border-box;
+          background-color: #fff;
+          margin-bottom: 15px;
+          box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+      }
+
+      #merge > #mergedProfiles {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+      }
+
+      #merge > div >.leftSide,  #merge > div > .rightSide{
+          display: flex;
+          flex-direction: row;
+      }
+
+      #merge > div > .rightSide{
+          display: flex;
+          flex-direction: row-reverse;
+      }
+
+      #merge > div > .leftSide iron-image, #merge > div > .rightSide iron-image{
+          display: inline-block;
+          --iron-image-width: 115px;
+          --iron-image-height: 115px;
+          margin: 0 10px;
+          border-radius: 50%;
+      }
+
+      #merge .rightSide > .image, #merge .leftSide > .image {
+          padding-right: 10px;
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+      }
+
+      #merge p {
+          color: #BDBDBD;
+          width: 100px;
+          height: 10px;
+          border-radius: 5px;
+          padding: 5px 0 0 0;
+          margin: 5px 10px 0px 10px;
+      }
+
+      #merge > p {
+          margin-top: 20px;
+          margin-right: 20px;
+          font-weight: 700;
+          align-self: flex-end;
+          color: #212121;
+      }
+
+      #merge > p:hover {
+          cursor: pointer;
+          color: #03A9F4;
+      }
+
+      .leftSide > div > p:first-child, .rightSide > div > p:first-child {
+          color: #212121 !important;
+          font-family: "Roboto";
+          font-weight: 500 !important;
+      }
+
+        #mergeText {
+            width: 50px;
+            height: 10px;
+            border-radius: 5px;
+        }
+
+    </style>
+
+      <div id="merge">
+
+          <div id="mergedProfiles">
+              <div class="leftSide">
+                  <div class="image animate"></div>
+                  <div>
+                      <p class="animate"></p>
+                      <p class="animate"></p>
+                      <p class="animate"></p>
+                      <p class="animate" ></p>
+                  </div>
+              </div>
+
+              <div class="rightSide">
+                  <div class="image animate"></div>
+                  <div>
+                      <p class="animate"></p>
+                      <p class="animate"></p>
+                      <p class="animate"></p>
+                      <p class="animate"></p>
+                  </div>
+              </div>
+          </div>
+
+          <p id="mergeText" class="animate"></p>
+
+      </div>
+
+  </template>
+  <script>
+    class AiLoader extends Polymer.Element {
+      static get is() { return 'ai-loader'; }
+      static get properties() {
+        return {
+          // Optional header text
+          headline: {
+            type: String,
+            value: ""
+          },
+          // Optional body text
+          text: {
+            type: String,
+            value: ""
+          },
+          // Optional href
+          href: {
+            type: String
+          },
+          // When loading is true, a skeleton loader is shown
+          loading: {
+            type: Boolean,
+            value: true
+          }
+        };
+      }
+    }
+
+    window.customElements.define(AiLoader.is, AiLoader);
+  </script>
+</dom-module>

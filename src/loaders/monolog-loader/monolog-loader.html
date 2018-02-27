@@ -1,0 +1,150 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/font-roboto/roboto.html">
+
+
+
+<dom-module id="monolog-loader">
+  <template>
+    <style>
+
+      .animate {
+        -webkit-animation: gradient-slide 2.2s ease infinite;
+        animation: gradient-slide 2.2s ease infinite;
+        background: 0 0/300% 300% linear-gradient(-61deg, var(--loader-background, #eeeeee) 40%, var(--loader-color, #f5f5f5) 50%, var(--loader-background, #eeeeee) 60%);
+      }
+
+      @keyframes gradient-slide{
+        0% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      #container {
+          background-color: #fff;
+          padding: 20px;
+          box-shadow: 0px 4px 4px rgba(180,180,180, 0.6), 2px 2px 1px rgba(180,180,180, 0.6), -2px 2px 1px rgba(180,180,180, 0.6);
+
+      }
+
+      #first {
+           width: 70px;
+           height: 20px;
+           border-radius: 5px;
+          margin-left: 2%;
+          display: inline-block;
+       }
+
+      #second {
+          width: 70px;
+          height: 20px;
+          border-radius: 5px;
+          margin-right: 2%;
+          display: inline-block;
+          float: right;
+      }
+
+      table {
+          border-collapse: collapse;
+          width: 100%;
+          background-color: #fff;
+          border-radius: 10px;
+      }
+
+      table th {
+          color: #bdbdbd;
+          font-weight: 300;
+          text-align: center;
+          padding: 5px;
+          border-right: 1px solid rgba(170,170,170,0.5);
+      }
+
+      table th:last-child {
+          border-right: none;
+      }
+
+      table td {
+          color: #323232;
+          text-align: center;
+          font-weight: 300;
+          padding: 5px;
+          border-right: 1px solid rgba(170,170,170,0.5);
+          border-top: 1px solid rgba(170,170,170,0.5);
+      }
+
+      table td:last-child {
+          border-right: none;
+
+      }
+
+      th > p, td > p {
+          width: 70px;
+          height: 10px;
+          border-radius: 10px;
+          margin: 10px auto;
+      }
+
+
+
+    </style>
+
+      <div id="container">
+          <p id="first" class="animate"></p>
+          <p id="second" class="animate"></p>
+
+          <table>
+              <tr>
+                  <th><p class="animate"></p></th>
+                  <th><p class="animate"></p></th>
+                  <th><p class="animate"></p></th>
+                  <th><p class="animate"></p></th>
+              </tr>
+
+              <template is="dom-repeat" items="[[counter]]">
+                  <tr>
+                      <td><p class="animate"></p></td>
+                      <td><p class="animate"></p></td>
+                      <td><p class="animate"></p></td>
+                      <td><p class="animate"></p></td>
+                  </tr>
+              </template>
+
+          </table>
+      </div>
+
+  </template>
+  <script>
+    class MonologLoader extends Polymer.Element {
+      static get is() { return 'monolog-loader'; }
+      static get properties() {
+        return {
+            counter: {
+                type: Array,
+                value: [1,2,3,4,5,6]
+            },
+          // Optional header text
+          headline: {
+            type: String,
+            value: ""
+          },
+          // Optional body text
+          text: {
+            type: String,
+            value: ""
+          },
+          // Optional href
+          href: {
+            type: String
+          },
+          // When loading is true, a skeleton loader is shown
+          loading: {
+            type: Boolean,
+            value: true
+          }
+        };
+      }
+
+
+    }
+
+    window.customElements.define(MonologLoader.is, MonologLoader);
+  </script>
+</dom-module>

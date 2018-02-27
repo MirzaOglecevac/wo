@@ -1,0 +1,242 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/d2l-dropdown/d2l-dropdown.html">
+<link rel="import" href="../../bower_components/d2l-menu/d2l-menu.html">
+
+<dom-module id="monolog-card">
+  <template>
+    <style>
+      
+	  
+	  #monolog {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			min-width: 350px;
+			padding: 10px;
+			margin: 0 auto;
+		    font-family: "Roboto";
+		    font-weight: 400;
+			border-radius: 5px;
+			box-sizing: border-box;
+			background-color: #fff;
+			box-shadow: 0px 2px 2px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6), -1px 1px 1px rgba(180,180,180, 0.6);
+		}
+
+	  	#numberOfLogs {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			width: 100%;
+			margin-bottom: 10px;
+			border-bottom: 1px solid rgba(170,170,170,0.5);
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		table th {
+			color: #bdbdbd;
+			font-weight: 500;
+			text-align: center;
+			padding: 5px;
+			border-right: 1px solid rgba(170,170,170,0.5);
+		}
+
+		 table th:last-child {
+			border-right: none !important;
+		 }
+
+		table td {
+			color: #323232;
+			text-align: center;
+			font-weight: 300;
+			padding: 5px;
+			border-right: 1px solid rgba(170,170,170,0.5);
+		}
+
+		  table td:first-child {
+			  font-weight: 500;
+		  }
+
+		  table td:nth-child(3) {
+			  min-width: 200px;
+		  }
+
+		table td:last-child {
+			border-right: none;
+			text-align: center;
+		}
+
+	  iron-icon {
+		  cursor: pointer;
+		  color: #666;
+		  --iron-icon-width: 22px;
+		  --iron-icon-height: 22px;
+		  margin-right: 5px;
+	  }
+
+		#sort {
+			cursor: pointer;
+			font-weight: 400;
+			display: inline-block;
+			margin-right: 3%;
+		}
+
+		#logs {
+			padding-left: 10px;
+		}
+
+		/* Dopdown menu */
+
+	  #dropdown {
+		  position: absolute;
+		  right: 50px;
+		  top: 148px;
+		  border-radius: 5px;
+		  z-index: 1000;
+		  display: none;
+		  box-shadow: 0px -1px 2px rgba(180,180,180, 0.6), 0px 2px 2px rgba(180,180,180, 0.6), 1px 1px 1px rgba(180,180,180, 0.6), -1px 1px 1px rgba(180,180,180, 0.6);
+	  }
+
+		#dropdown > p{
+			background-color: #eee;
+			padding: 5px;
+			width: 100px;
+			text-align: center;
+			border: none;
+			margin: 0;
+			cursor: pointer;
+		}
+
+		#dropdown > p:hover {
+			color: #2196F3;
+		}
+
+	  #dropdown > p:first-child{
+		  border-top-left-radius: 5px;
+		  border-top-right-radius: 5px;
+	  }
+
+	  #dropdown > p:last-child{
+		  border-bottom-left-radius: 5px;
+		  border-bottom-right-radius: 5px;
+	  }
+
+	  .arrow_box {
+		  position: relative;
+		  background: #88b7d5;
+	  }
+	  .arrow_box:after {
+		  bottom: 100%;
+		  left: 50%;
+		  border: solid transparent;
+		  content: " ";
+		  height: 0;
+		  width: 0;
+		  position: absolute;
+		  pointer-events: none;
+		  border-color: rgba(136, 183, 213, 0);
+		  border-bottom-color: #eee;
+		  border-width: 8px;
+		  margin-left: -5px;
+	  }
+
+    </style>
+   
+
+	  <div id="monolog">
+		  <div id="numberOfLogs">
+			  <span id="logs">42 logs</span>
+			  <span on-click="_toggleDropdown" id="sort">Sort</span>
+			  <div id="dropdown" class="arrow_box">
+				  <p on-click="_sort">Warning</p>
+				  <p on-click="_sort">Info</p>
+				  <p on-click="_sort">Error</p>
+			  </div>
+		  </div>
+
+		  <table>
+			  <tr>
+				  <th>Level</th>
+				  <th>Date</th>
+				  <th>Message</th>
+				  <th></th>
+			  </tr>
+
+			  <template is="dom-repeat" items="[[entry]]" as="ent">
+				  <tr>
+					  <td style="color: [[_setColor(ent.level)]]">{{ent.level}}</td>
+					  <td>{{ent.date}}</td>
+					  <td>{{ent.message}}</td>
+					  <td>
+						  <iron-icon icon="mail" on-click="_sendMailToDeveloper"></iron-icon>
+					  </td>
+				  </tr>
+			  </template>
+
+		  </table>
+
+
+
+	  </div>
+
+	
+	
+	</template>
+  <script>
+    
+    class MonologCard extends Polymer.Element {
+      static get is() { return 'monolog-card'; }
+	  
+	  static get properties(){
+		return {
+			entry: Object,
+			dropdownOpened: {
+			    type: Boolean,
+				value: false
+			}
+		}
+	  }
+
+	  _setColor(item){
+          if(item =="Warning"){
+              return "#FFC400";
+		  }else if(item == "Error"){
+              return "red";
+		  }
+	  }
+
+        _sendMailToDeveloper(){
+          console.log("Mail sended to developer.");
+		}
+
+		_toggleDropdown(){
+
+          if(this.dropdownOpened == false){
+              this.$.dropdown.style="display: block;";
+              this.dropdownOpened = true;
+		  }else if(this.dropdownOpened == true){
+              this.$.dropdown.style="display: none;";
+              this.dropdownOpened = false;
+		  }
+		}
+
+		_sort(){
+            this.$.dropdown.style="display: none;";
+            this.dropdownOpened = false;
+
+            // sort monolog list
+		}
+
+
+      
+    }
+
+    window.customElements.define(MonologCard.is, MonologCard);
+  </script>
+</dom-module>

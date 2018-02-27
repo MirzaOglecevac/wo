@@ -1,0 +1,51 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+
+<dom-module id="profile-item">
+  <template>
+    <style>
+
+	  .profile {
+		display: flex;
+		flex-direction: column;
+	  }
+
+	  .profile > iron-image {
+		  --iron-image-height: 100px;
+		  --iron-image-width: 100px;
+		  display: inline-block;
+		  margin: 0 10px;
+		  border-radius: 50%;
+	  }
+
+	</style>
+
+	  <div class="profile" >
+		  <iron-image src$={{entry.image}}></iron-image>
+		  <p>{{entry.name}}</p>
+	  </div>
+
+	</template>
+
+	<script>
+
+	class ProfileItem extends Polymer.Element {
+	  static get is() { return 'profile-item'; }
+
+	  static get properties(){
+		return {
+			entry: Object
+		}
+	  }
+
+
+
+
+	}
+
+	window.customElements.define(ProfileItem.is, ProfileItem);
+	</script>
+
+</dom-module>
